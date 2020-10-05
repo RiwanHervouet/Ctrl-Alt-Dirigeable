@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Tobii.Gaming;
+//using Tobii.Gaming;
 using UnityEngine.UI;
 //using UnityEngine.UIElements;
 
 public class FocusTest : MonoBehaviour
 {
     #region Initiatlization
-    public GazeAware gaze;
+    //public GazeAware gaze;
     private Button button;
     #endregion
 
@@ -18,16 +18,16 @@ public class FocusTest : MonoBehaviour
 
     void Start()
     {
-        gaze = GetComponent<GazeAware>();
+        //gaze = GetComponent<GazeAware>();
         button = GetComponent<Button>();
 
     }
 
     void Update()
     {
-        if (gaze.HasGazeFocus)
+        /*if (gaze.HasGazeFocus)
         {
             //button.Select
-        }
+        }*/
     }
 }
