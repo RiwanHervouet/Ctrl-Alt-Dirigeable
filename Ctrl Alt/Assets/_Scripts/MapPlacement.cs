@@ -3,8 +3,8 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 
-//[CustomEditor(typeof(RectTransform))]
-public class MapPlacement : MonoBehaviour
+[CustomEditor(typeof(RectTransform))]
+public class MapPlacement : EditorWindow
 {
     public RectTransform gridObject;
     private Rect gridData;
@@ -16,10 +16,10 @@ public class MapPlacement : MonoBehaviour
     GUILayoutOption[] layoutOptions;
 
     [MenuItem("Window/Arrange dots")]
-    /*public static void ShowWindow()
+    public static void ShowWindow()
     {
-        GetWindow<Mapplacement>("Map Placement Window");
-    }*/
+        GetWindow<MapPlacement>("Map Placement Window");
+    }
 
     public void OnGUI()
     {
@@ -30,14 +30,6 @@ public class MapPlacement : MonoBehaviour
         */
         EditorGUILayout.Space();
         if (GUILayout.Button("Arrange all dots in the map grid"))
-        {
-            ArrangeStuff();
-        }
-    }
-    
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
         {
             ArrangeStuff();
         }
@@ -67,13 +59,13 @@ public class MapPlacement : MonoBehaviour
             tempParent = gridObject.GetChild(i).GetComponent<RectTransform>();
             //on bouge le pivot par rapport au pivot 
             //le pivot du parent est au milieu de la grille
-            tempParent.anchoredPosition = new Vector2(0, (-gridData.height * 0.5f) + ySizeOfImageInGrid * (i + 0.5f));
+            tempParent.anchoredPosition = new Vector2(0, -ySizeOfImageInGrid * i);
             
             for (int j = 0; j < numberOfHorizontalItems; j++)
             {
                 itemsToArrange[i, j] = tempParent.GetChild(j).GetComponent<RectTransform>();
                 itemsToArrange[i, j].anchoredPosition = new Vector2((-gridData.width * 0.5f) + xSizeOfImageInGrid * (j + 0.5f), 0);
-                SetSize(itemsToArrange[i, j], new Vector2(minimumSizeOfImageInGrid, minimumSizeOfImageInGrid)); //divisé par un truc petit qui le rend plus grand pour remplir la case.
+                SetSize(itemsToArrange[i, j], imageSize); //divisé par un truc petit qui le rend plus grand pour remplir la case. ou pas, parce que pour une raison incroyable, ça marche alors que ça marchait pas avant. YES Unity
             }
         }
     }
