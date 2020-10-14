@@ -4,8 +4,10 @@ using UnityEngine;
 public class OOE_Map : MonoBehaviour
 {
     #region Initiatlization
-    #region 
-    public GameObject player;
+    #region Inhérents au jeu
+    private GameObject player;
+
+    
     #endregion
 
     #region Map Characteristics to become Scriptable Object après les LD elements
@@ -18,7 +20,7 @@ public class OOE_Map : MonoBehaviour
 
     #region LD elements to become Scriptable Object
     [Header("LD elements")]
-    public GameObject spawnPlayer;
+    public Vector2 spawnPlayer;
     public GameObject mountain;
     public GameObject storm;
     public GameObject missile; // ou sinon des éclairs (ronds qui se rapprochent jusqu'à frapper une zone fortement quand ils sont tous sur le même point (la déflagration))
@@ -32,7 +34,7 @@ public class OOE_Map : MonoBehaviour
 
     void Start()
     {
-        
+        player.transform.position = spawnPlayer;
     }
 
     void Update()

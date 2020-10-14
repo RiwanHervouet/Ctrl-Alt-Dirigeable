@@ -4,7 +4,7 @@ using UnityEngine;
 public class Module_Map : MonoBehaviour
 {
     #region Initiatlization
-	
+    private float maxMapRefreshTimer;
     #endregion
 
     void Awake()
