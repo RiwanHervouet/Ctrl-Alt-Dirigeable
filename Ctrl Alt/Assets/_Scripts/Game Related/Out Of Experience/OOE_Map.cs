@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class OOE_Map : MonoBehaviour
@@ -13,7 +14,8 @@ public class OOE_Map : MonoBehaviour
     #region Map Characteristics to become Scriptable Object après les LD elements
     [Header("Map Characteristics")]
     [Tooltip("En case par seconde")]
-    [Range(0f, 3f)] public float speed = 1f;
+    [Range(0f, 3f)] public float standardUpdateTime = 1f;
+    private float timeUntilUpdate = 0f;
     [Tooltip("La matrice fait 32x32")]
     public int[,] boundariesMap = new int[64, 32];
     #endregion
@@ -35,10 +37,31 @@ public class OOE_Map : MonoBehaviour
     void Start()
     {
         player.transform.position = spawnPlayer;
+        timeUntilUpdate = standardUpdateTime;
+        GameEvents.Instance.onNextTurn += NextTurn;
+    }
+
+    private void OnDestroy()
+    {
+        GameEvents.Instance.onNextTurn -= NextTurn;
     }
 
     void Update()
     {
-        
+        timeUntilUpdate -= Time.deltaTime;
+        if (timeUntilUpdate <= 0f)
+        {
+            GameEvents.Instance.NextTurn();
+        }
+        else
+        {
+            timeUntilUpdate = standardUpdateTime;
+        }
+    }
+
+    private void NextTurn()
+    {
+        //player
+        //things happen
     }
 }
