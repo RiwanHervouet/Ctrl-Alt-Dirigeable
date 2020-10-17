@@ -5,15 +5,15 @@ using UnityEngine.UI;
 [CustomEditor(typeof(RectTransform))]
 public class Tools_UI_Grid_Set : EditorWindow
 {
-    #region init
+    #region Init
     public RectTransform gridParentObject;
     public RectTransform emptyUIElement;
     private Rect gridData;
     private RectTransform[,] itemsToArrange;
-    private int mapLength;
-    private int _s_mapLength;
-    private int mapHeight;
-    private int _s_mapHeight;
+    private int mapLength = 128;
+    private int _s_mapLength = 4;
+    private int mapHeight = 64;
+    private int _s_mapHeight = 2;
     private Sprite imageToArrange;
     private Vector2 imageSize;
     private bool preferToStretchImage;
@@ -61,7 +61,7 @@ public class Tools_UI_Grid_Set : EditorWindow
             }
 
             emptyUIElement = (RectTransform)EditorGUILayout.ObjectField("Empty UI Element", emptyUIElement, typeof(RectTransform), false, layoutOptions);
-            if(imageToArrange == null)
+            if (imageToArrange == null)
             {
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("ATTENTION The image works best when proportions are squared.", layoutOptions);
@@ -96,11 +96,18 @@ public class Tools_UI_Grid_Set : EditorWindow
     #region Used Methods
     private void ArrangeStuff()
     {
+        #region Error Management
+        if (gridParentObject == null)
+        {
+            Debug.LogWarning("You must select a Parent to arrange images in !");
+            return;
+        }
+        #endregion
         #region Determine sizes of grid, image (display and gaps within the grid) 
         int numberOfVerticalItems = gridParentObject.childCount;
         int numberOfHorizontalItems = gridParentObject.GetChild(0).childCount;
         gridData = RectTransformUtility.PixelAdjustRect(gridParentObject, gridParentObject.parent.GetComponent<Canvas>());
-        itemsToArrange = new RectTransform[numberOfVerticalItems, numberOfHorizontalItems]; 
+        itemsToArrange = new RectTransform[numberOfVerticalItems, numberOfHorizontalItems];
 
 
         float xSizeOfImageInGrid = gridData.width / numberOfHorizontalItems;
@@ -146,6 +153,23 @@ public class Tools_UI_Grid_Set : EditorWindow
 
     private void CreateGrid()
     {
+        #region Error Management
+        if (gridParentObject == null || emptyUIElement == null || imageToArrange == null)
+        {
+            if (gridParentObject == null)
+                Debug.LogWarning("You must select a Parent to arrange images in !");
+            if (emptyUIElement == null)
+                Debug.LogWarning("You must select the \"Empty UI Element\" prefab for this tool to work !");
+            if (imageToArrange == null)
+                Debug.LogWarning("You must select an image to fill the grid with !");
+            return;
+        }
+        if (mapLength < 1 || mapHeight < 1)
+        {
+            Debug.LogError("You might want to set some valid numbers for the height and length of the grid !");
+            return;
+        }
+        #endregion
         #region Determine sizes of grid, image (display and gaps within the grid) 
         gridData = RectTransformUtility.PixelAdjustRect(gridParentObject, gridParentObject.parent.GetComponent<Canvas>());
         itemsToArrange = new RectTransform[mapHeight, mapLength];
@@ -155,8 +179,8 @@ public class Tools_UI_Grid_Set : EditorWindow
 
         float minimumSizeOfImageInGrid = xSizeOfImageInGrid <= ySizeOfImageInGrid ? xSizeOfImageInGrid : ySizeOfImageInGrid;
 
-        imageSize = preferToStretchImage ? 
-            new Vector2(xSizeOfImageInGrid, ySizeOfImageInGrid) : 
+        imageSize = preferToStretchImage ?
+            new Vector2(xSizeOfImageInGrid, ySizeOfImageInGrid) :
             new Vector2(minimumSizeOfImageInGrid, minimumSizeOfImageInGrid);
 
         float yCoordinateOfRow = 1f;

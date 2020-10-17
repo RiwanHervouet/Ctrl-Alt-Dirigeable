@@ -6,10 +6,12 @@ public class GameEvents : Singleton<GameEvents>
 {
     #region Events
     public event Action onNextTurn;
+    public event Action onNextEnvironmentUpdate;
+    public event Action onNextPlayerUpdate;
 
     #endregion
 
-
+    #region Methods related to events
     public void NextTurn()
     {
         if (onNextTurn != null)
@@ -17,13 +19,19 @@ public class GameEvents : Singleton<GameEvents>
             onNextTurn();
         }
     }
-    void Start()
+    public void NextEnvironmentUpdate()
     {
-        
+        if (onNextEnvironmentUpdate != null)
+        {
+            onNextEnvironmentUpdate();
+        }
     }
-
-    void Update()
+    public void NextPlayerUpdate()
     {
-        
+        if (onNextPlayerUpdate != null)
+        {
+            onNextPlayerUpdate();
+        }
     }
+    #endregion
 }
