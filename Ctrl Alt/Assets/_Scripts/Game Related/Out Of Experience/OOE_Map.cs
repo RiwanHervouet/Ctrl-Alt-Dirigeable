@@ -1,19 +1,21 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class OOE_Map : MonoBehaviour
 {
     #region Initiatlization
-    #region Inhérents au jeu
-    private GameObject player;
 
-    
+    #region Inhérents au jeu
+    public GameObject player;
+    public MapObject playerMO;
+    public Vector2 matrixTopLeftCoordinate;
     #endregion
 
     #region Map Characteristics to become Scriptable Object après les LD elements
     [Header("Map Characteristics")]
     [Tooltip("La matrice fait 32x32")]
-    public int[,] boundariesMap = new int[64, 32];
+    public MapEntity[,] fullMap = new MapEntity[64, 32];
     #endregion
 
     #region LD elements to become Scriptable Object
@@ -22,13 +24,13 @@ public class OOE_Map : MonoBehaviour
     public GameObject mountain;
     public GameObject storm;
     public GameObject missile; // ou sinon des éclairs (ronds qui se rapprochent jusqu'à frapper une zone fortement quand ils sont tous sur le même point (la déflagration))
-    #endregion
+
+    public Color backgroundColor;
+    public Color playerColor;
+    public Color mountainColor;
     #endregion
 
-    void Awake()
-    {
-        
-    }
+    #endregion
 
     void Start()
     {
@@ -39,10 +41,6 @@ public class OOE_Map : MonoBehaviour
     private void OnDestroy()
     {
         GameEvents.Instance.onNextTurn -= NextTurn;
-    }
-
-    void Update()
-    {
     }
 
     private void NextTurn()
