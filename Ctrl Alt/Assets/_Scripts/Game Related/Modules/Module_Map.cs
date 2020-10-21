@@ -18,13 +18,14 @@ public class Module_Map : MonoBehaviour
     private Transform tempParent;
 
     private OOE_Map ooe_Map;
-    private Image[,] fullmap;
     public Vector2 matrixTopLeftCoordinate;
     public Vector2 previousNextRelativePostion;
     #endregion
 
     void Awake()
     {
+        matrixParent = gameObject.GetComponent<Transform>();
+
         for (int j = 0; j < matrix.GetLength(1); j++)
         {
             tempParent = matrixParent.GetChild(j).transform;
@@ -37,29 +38,37 @@ public class Module_Map : MonoBehaviour
 
     void Start()
     {
-        GameEvents.Instance.onNextEnvironmentUpdate += UpdateMatrix;
+        GameEvents.Instance.onNextRefresh += UpdateMatrix;
         InitMatrix();
+        GameEvents.Instance.onNextPlayerUpdate += UpdateTopLeftMatrix;
     }
 
     void OnDestroy()
     {
-        GameEvents.Instance.onNextEnvironmentUpdate -= UpdateMatrix;
+        GameEvents.Instance.onNextRefresh -= UpdateMatrix;
+        GameEvents.Instance.onNextPlayerUpdate -= UpdateTopLeftMatrix;
     }
 
     void UpdateMatrix()
     {
-        //ooe_Map.fullMap
+        for (int j = 0; j < matrix.GetLength(1); j++)
+        {
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                matrix[i, j].color = ooe_Map.fullMap[i + (int)matrixTopLeftCoordinate.x, j + (int)matrixTopLeftCoordinate.y].myColor;
+            }
+        }
     }
 
     void InitMatrix()
     {
-        matrixTopLeftCoordinate = new Vector2(ooe_Map.playerMO.xPosition - 15, ooe_Map.playerMO.yPosition - 15);
+        matrixTopLeftCoordinate = new Vector2(ooe_Map.playerMO.me.xPosition - 15, ooe_Map.playerMO.me.yPosition - 15);
     }
 
     void UpdateTopLeftMatrix()
     {
-        matrixTopLeftCoordinate += ooe_Map.playerMO.nextRelativePosition;
+        matrixTopLeftCoordinate += ooe_Map.playerMO.me.nextRelativePosition;
 
-        previousNextRelativePostion = ooe_Map.playerMO.nextRelativePosition; //sert quand j'adapte la caméra du à vers où se dirige le joueur
+        previousNextRelativePostion = ooe_Map.playerMO.me.nextRelativePosition; //sert quand j'adapte la caméra du à vers où se dirige le joueur
     }
 }

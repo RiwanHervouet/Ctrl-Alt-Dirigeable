@@ -5,18 +5,18 @@ using UnityEngine;
 public class GameEvents : Singleton<GameEvents>
 {
     #region Events
-    public event Action onNextTurn;
-    public event Action onNextEnvironmentUpdate;
     public event Action onNextPlayerUpdate;
+    public event Action onNextEnvironmentUpdate;
+    public event Action onNextRefresh;
 
     #endregion
 
     #region Methods related to events
-    public void NextTurn()
+    public void NextRefresh()
     {
-        if (onNextTurn != null)
+        if (onNextRefresh != null)
         {
-            onNextTurn();
+            onNextRefresh();
         }
     }
     public void NextEnvironmentUpdate()

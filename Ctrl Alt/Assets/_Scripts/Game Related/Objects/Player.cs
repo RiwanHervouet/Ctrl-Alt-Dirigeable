@@ -3,23 +3,23 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    #region Initiatlization
-    [Range(1,6)]public int speed = 3;
-    #endregion
+    public MapObject me;
 
     void Awake()
     {
-        
+        me = new MapObject(15, 15, objectType.player);
+
+        me.nextRelativePosition = new Vector2(0, 1);
     }
 
-    void Start()
+    void OnEnable()
     {
-        GameEvents.Instance.onNextTurn += NextAction;
+        //GameEvents.Instance.onNextPlayerUpdate += NextAction;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
-        GameEvents.Instance.onNextTurn -= NextAction;
+        //GameEvents.Instance.onNextPlayerUpdate -= NextAction;
     }
 
     void NextAction()

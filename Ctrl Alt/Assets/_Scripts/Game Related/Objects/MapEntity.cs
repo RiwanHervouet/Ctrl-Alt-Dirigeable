@@ -3,8 +3,7 @@ using UnityEngine.UI;
 
 public class MapEntity
 {
-    public int xPosition = 0;
-    public int yPosition = 0;
+    //public bool objectOnMe = false; //pour ne pas afficher ce map entity (désactiver l'image) ou faire d'autres choses
 
     public Color myColor 
     { 
@@ -12,19 +11,19 @@ public class MapEntity
         set { myImage.color = value; }
     }
 
+    private Color baseColor = new Color(Mathf.InverseLerp(0, 255, 139), Mathf.InverseLerp(0, 255, 69), Mathf.InverseLerp(0, 255, 19)); //brown
+
     private Image myImage;
 
     #region Constructors
-    public MapEntity (int xPosition,int yPosition, Image image)
+    public MapEntity (Image image)
     {
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
-
         myImage = image;
     }
-    public MapEntity(Image image)
+    public MapEntity (Image image, Color baseColor)
     {
         myImage = image;
+        this.baseColor = baseColor;
     }
     #endregion
 }

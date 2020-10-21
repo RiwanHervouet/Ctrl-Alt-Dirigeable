@@ -4,23 +4,72 @@ using UnityEngine.UI;
 
 public enum objectType { mountain,player,storm,lightning }
 
-public class MapObject : MapEntity
+public class MapObject
 {
+    public int xPosition = 0;
+    public int yPosition = 0;
+
     public objectType type;
 
     public Vector2[] graphics;
 
     public Vector2 nextRelativePosition;
 
-    #region Constructors
-    public MapObject(int xPosition, int yPosition, Image image, Vector2[] graphics) : base(xPosition, yPosition, image)
+    public Color myColor;
+    /*
     {
-        this.graphics = graphics;
+        get { return mapEntity.myColor; }
+        set { mapEntity.myColor = value; }
     }
+    */
 
-    public MapObject(Image image) : base(image)
+    private MapEntity mapEntity;
+
+
+
+    #region Constructors
+    public MapObject(int xPosition, int yPosition, objectType objectType)
     {
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
 
+        this.type = objectType;
+
+        switch (objectType)
+        {
+            case objectType.mountain:
+                break;
+            case objectType.player:
+                InitPlayer();
+                break;
+            case objectType.storm:
+                break;
+            case objectType.lightning:
+                break;
+            default:
+                break;
+        }
     }
     #endregion
+
+    void InitObject()
+    {
+
+    }
+
+    void InitPlayer()
+    {
+        graphics = new Vector2[] { new Vector2(-1, 0), new Vector2(-2, 0) };
+    }
+
+    void UpdateEnvironmentObject()
+    {
+        xPosition += (int)nextRelativePosition.x;
+        yPosition += (int)nextRelativePosition.y;
+    }
+
+    public void UpdateObject()
+    {
+        //OOE_Map
+    }
 }
