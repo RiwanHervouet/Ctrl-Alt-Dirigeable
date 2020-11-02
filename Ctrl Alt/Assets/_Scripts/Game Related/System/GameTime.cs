@@ -57,6 +57,7 @@ public class GameTime : Singleton<GameTime>
             {
                 updatesUntilEnvironmentUpdate--;
             }
+
             if (updatesUntilPlayerUpdate <= 0)
             {
                 GameEvents.Instance.NextPlayerUpdate();
@@ -66,9 +67,9 @@ public class GameTime : Singleton<GameTime>
             {
                 updatesUntilPlayerUpdate--;
             }
-        }
-        else
-        {
+
+            GameEvents.Instance.NextRefresh();
+
             timeUntilUpdate = refreshRate;
         }
     }

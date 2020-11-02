@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum objectType { mountain,player,storm,lightning }
+public enum objectType { mountain, player, storm, lightning, nothing }
 
 public class MapObject
 {
@@ -28,10 +28,10 @@ public class MapObject
 
 
     #region Constructors
-    public MapObject(int xPosition, int yPosition, objectType objectType)
+    public MapObject(int xPositionInit, int yPositionInit, objectType objectType)
     {
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
+        xPosition = xPositionInit;
+        yPosition = yPositionInit;
 
         this.type = objectType;
 

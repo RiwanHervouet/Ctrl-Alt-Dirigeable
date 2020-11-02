@@ -6,7 +6,11 @@ public class GameEvents : Singleton<GameEvents>
 {
     #region Events
     public event Action onNextPlayerUpdate;
+
     public event Action onNextEnvironmentUpdate;
+    //public event Action onNextEnvironmentUpdateMountain;
+    //public event Action onNextEnvironmentUpdateStorm;
+
     public event Action onNextRefresh;
 
     #endregion

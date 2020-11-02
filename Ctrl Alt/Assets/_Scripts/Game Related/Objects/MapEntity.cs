@@ -1,8 +1,14 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class MapEntity
 {
+    public List<objectType> objectOnMe = new List<objectType>();
+
+    //public bool inAStorm = false;
+    //public int edgeOfTheMap = false;
+
     //public bool objectOnMe = false; //pour ne pas afficher ce map entity (désactiver l'image) ou faire d'autres choses
 
     public Color myColor 
@@ -11,7 +17,9 @@ public class MapEntity
         set { myImage.color = value; }
     }
 
-    private Color baseColor = new Color(Mathf.InverseLerp(0, 255, 139), Mathf.InverseLerp(0, 255, 69), Mathf.InverseLerp(0, 255, 19)); //brown
+    private Color _baseColor = Colors.background1; //brown
+
+    public Color BaseColor { get { return _baseColor; } }
 
     private Image myImage;
 
@@ -23,7 +31,7 @@ public class MapEntity
     public MapEntity (Image image, Color baseColor)
     {
         myImage = image;
-        this.baseColor = baseColor;
+        this._baseColor = baseColor;
     }
     #endregion
 }
