@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class MapEntity
 {
-    public List<objectType> objectOnMe = new List<objectType>();
+    public List<MapObject> objectOnMe = new List<MapObject>();
 
     //public bool inAStorm = false;
     //public int edgeOfTheMap = false;

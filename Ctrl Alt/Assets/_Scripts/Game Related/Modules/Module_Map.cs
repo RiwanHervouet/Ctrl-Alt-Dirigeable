@@ -9,6 +9,7 @@ using UnityEngine.UI;
  *      aka changer la couleur des LEDs 
  *      aka avoir l'ordre de priorité
 */
+[SelectionBase]
 public class Module_Map : MonoBehaviour
 {
     #region Initiatlization

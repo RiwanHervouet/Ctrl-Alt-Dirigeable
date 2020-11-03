@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[SelectionBase]
 public class OOE_Map : MonoBehaviour
 {
     #region Initiatlization

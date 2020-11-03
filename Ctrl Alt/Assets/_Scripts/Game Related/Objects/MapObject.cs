@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public enum objectType { mountain, player, storm, lightning, nothing }
 
-public class MapObject
+public class MapObject : MonoBehaviour
 {
     public int xPosition = 0;
     public int yPosition = 0;
@@ -18,12 +18,12 @@ public class MapObject
     public Color myColor;
     /*
     {
-        get { return mapEntity.myColor; }
-        set { mapEntity.myColor = value; }
+        get { return _myColor; }
+        set { _myColor = value; }
     }
     */
 
-    private MapEntity mapEntity;
+    private Color _myColor;
 
 
 
