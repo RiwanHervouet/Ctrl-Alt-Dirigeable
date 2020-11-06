@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 [SelectionBase]
@@ -16,7 +15,7 @@ public class OOE_Map : MonoBehaviour
     #region Map Characteristics to become Scriptable Object après les LD elements
     [Header("Map Characteristics")]
     [Tooltip("La matrice fait 32x32")]
-    public MapEntity[,] fullMap = new MapEntity[64, 32];
+    public MapEntity[,] fullMap;
     #endregion
 
     #region LD elements to become Scriptable Object
@@ -29,14 +28,14 @@ public class OOE_Map : MonoBehaviour
     #endregion
 
     Transform tempParent;
+    Color tempColor;
 
     #endregion
 
     void Start()
     {
-        //player.transform.position = spawnPlayer;
-
-        //playerMO = player.GetComponent<Player>();
+        if (transform.childCount < 2) Debug.LogWarning("The map must be child of this object");
+        fullMap = new MapEntity[transform.GetChild(0).childCount, transform.childCount];
 
         for (int j = 0; j < fullMap.GetLength(1); j++)
         {
@@ -45,33 +44,22 @@ public class OOE_Map : MonoBehaviour
             {
                 fullMap[i, j] = new MapEntity(
                         tempParent.GetChild(i).GetComponent<Image>(),
-                        Mathf.FloorToInt(i * 0.125f - j * .015625f) % 2 == 0 ? Colors.background1 : Colors.background2
+                        Mathf.FloorToInt(i * 0.125f - j * .015625f) % 2 == 0 ? Colors.background1 : Colors.background2,
+                        DistanceToEdgeOfMap(i, j)
                         );
             }
         }
     }
     void OnEnable()
     {
-        GameEvents.Instance.onNextPlayerUpdate += NextPlayerUpdate;
-        GameEvents.Instance.onNextEnvironmentUpdate += NextEnvironmentUpdate;
-        GameEvents.Instance.onNextRefresh += NextRefresh;
+        GameEvents.Instance.OnNextRefresh += NextRefresh;
     }
     private void OnDisable()
     {
-        GameEvents.Instance.onNextPlayerUpdate -= NextPlayerUpdate;
-        GameEvents.Instance.onNextEnvironmentUpdate -= NextEnvironmentUpdate;
-        GameEvents.Instance.onNextRefresh -= NextRefresh;
-    }
-
-    private void NextPlayerUpdate()
-    {
-        //player
-        //things happen
-    }
-
-    private void NextEnvironmentUpdate()
-    {
-        //things happen
+        if (GameEvents.Instance != null)
+        {
+            GameEvents.Instance.OnNextRefresh -= NextRefresh;
+        }
     }
 
     private void NextRefresh()
@@ -80,8 +68,81 @@ public class OOE_Map : MonoBehaviour
         {
             for (int i = 0; i < fullMap.GetLength(0); i++)
             {
-                fullMap[i, j].myColor = fullMap[i, j].BaseColor; //MethodPourTrouverLaCouleurQuiCorrespondEnFonctionDesObjetsAuDessus();
+                fullMap[i, j].myColor = DisplayRightColor(fullMap[i, j]);
             }
         }
+    }
+
+
+    private Color DisplayRightColor(MapEntity mapPoint)
+    {
+        if (mapPoint.objectVisualOnMe.Count > 0)
+        {
+            if (mapPoint.objectVisualOnMe.Count > 1)
+            {
+                GameEvents.Instance.PlayerIsHit(mapPoint.objectVisualOnMe); 
+            }
+            int indexObjectToDisplay = 1000;
+            for (int i = 0; i < mapPoint.objectVisualOnMe.Count; i++)
+            {
+                for (int j = 0; j < VisualHierarchy.objectHierarchy.Length; j++)
+                {
+                    if (mapPoint.objectVisualOnMe[i] == VisualHierarchy.objectHierarchy[j])
+                    {
+                        indexObjectToDisplay = j < indexObjectToDisplay ? j : indexObjectToDisplay;
+                        break;
+                    }
+                }
+            }
+
+            switch (VisualHierarchy.objectHierarchy[indexObjectToDisplay])
+            {
+                case objectType.mountain:
+                    tempColor = Colors.mountain;
+                    break;
+                case objectType.player:
+                    tempColor = Colors.player;
+                    break;
+                case objectType.lightning:
+                    tempColor = Colors.lightning;
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            tempColor = mapPoint.BaseColor;
+        }
+
+        return Overlay(mapPoint, tempColor);
+    }
+
+    private Color Overlay(MapEntity mapPoint, Color currentColor)
+    {
+        if (mapPoint.inAStorm)
+        {
+            currentColor = Color.Lerp(currentColor, Colors.storm, Colors.stormAlpha);
+        }
+        /*
+        if (mapPoint.windFX)
+        {
+            currentColor = Color.Lerp(currentColor, Colors.storm, Colors.stormAlpha);
+        }
+        */
+        if (mapPoint.edgeOfMapDistance < Colors.almostOutOfBounds.Length)
+        {
+            currentColor = Color.Lerp(currentColor, Colors.outOfBounds, Colors.almostOutOfBounds[mapPoint.edgeOfMapDistance]);
+        }
+
+        return currentColor;
+    }
+
+    private int DistanceToEdgeOfMap(int xCoordinate, int yCoordinate)
+    {
+        int closestHorizontalBorder = fullMap.GetLength(0) - 1 - xCoordinate < xCoordinate ? fullMap.GetLength(0) - 1 - xCoordinate : xCoordinate;
+        int closestVerticalBorder = fullMap.GetLength(1) - 1 - yCoordinate < yCoordinate ? fullMap.GetLength(1) - 1 - yCoordinate : yCoordinate;
+
+        return closestHorizontalBorder < closestVerticalBorder ? closestHorizontalBorder : closestVerticalBorder;
     }
 }

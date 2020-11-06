@@ -1,41 +1,39 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameEvents : Singleton<GameEvents>
 {
     #region Updates related
     #region Events
-    public event Action onNextPlayerUpdate;
+    public event Action OnNextPlayerUpdate;
 
-    public event Action onNextEnvironmentUpdate;
-    //public event Action onNextEnvironmentUpdateMountain;
-    //public event Action onNextEnvironmentUpdateStorm;
+    public event Action OnNextEnvironmentUpdate;
+    //public event Action onNextEnvironmentUpdateStart;
+    //public event Action onNextEnvironmentUpdateData;
 
-    public event Action onNextRefresh;
+    public event Action OnNextRefresh;
+
+    public event Action OutOfTimeEvents;
     #endregion
 
     #region Methods related to events
     public void NextRefresh()
     {
-        if (onNextRefresh != null)
-        {
-            onNextRefresh();
-        }
+        OnNextRefresh?.Invoke();
     }
     public void NextEnvironmentUpdate()
     {
-        if (onNextEnvironmentUpdate != null)
-        {
-            onNextEnvironmentUpdate();
-        }
+        OnNextEnvironmentUpdate?.Invoke();
     }
     public void NextPlayerUpdate()
     {
-        if (onNextPlayerUpdate != null)
-        {
-            onNextPlayerUpdate();
-        }
+        OnNextPlayerUpdate?.Invoke();
+    }
+    public void OutOfTimeUpdate()
+    {
+        OutOfTimeEvents?.Invoke();
     }
     #endregion
     #endregion
@@ -44,17 +42,34 @@ public class GameEvents : Singleton<GameEvents>
 
     #region Input related
     #region Events
-    /*public event Action onPlayerConfirmedGaze;
+    public event Func<Vector2> OnPlayerDirectionChange;
+    public event Action<List<objectType>> OnPlayerGettingHit;
+    public event Action OnShipRepaired;
     #endregion
 
     #region Methods related to events
-    public void PlayerConfirmedGaze()
+    public Vector2 PlayerDirectionChange()
     {
-        if (onPlayerConfirmedGaze != null)
+        if (OnPlayerDirectionChange != null)
         {
-            onPlayerConfirmedGaze();
+            return OnPlayerDirectionChange();
         }
-    }*/
+        OnPlayerDirectionChange = null;
+        return Vector2.zero;
+    }
+
+    public void PlayerIsHit(List<objectType> objectHit)
+    {
+        if (OnPlayerGettingHit != null)
+        {
+            OnPlayerGettingHit(objectHit);
+        }
+    }
+
+    public void RepairShip() //not called yet
+    {
+        OnShipRepaired?.Invoke();
+    }
     #endregion
     #endregion
 }

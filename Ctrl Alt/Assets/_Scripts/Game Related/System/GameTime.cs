@@ -19,6 +19,8 @@ public class GameTime : Singleton<GameTime>
 
     [Tooltip("Tous les combien de frames le joueurs est update ?")]
     [SerializeField] [Range(1, 8)] private int playerUpdateRate = 4;
+
+    public bool gameIsPaused = false;
     #endregion
 
     #region Public informations
@@ -45,32 +47,37 @@ public class GameTime : Singleton<GameTime>
 
     void Update()
     {
-        timeUntilUpdate -= Time.deltaTime;
-        if (timeUntilUpdate <= 0f)
+        if (!gameIsPaused)
         {
-            if (updatesUntilEnvironmentUpdate <= 0)
+            timeUntilUpdate -= Time.deltaTime;
+            if (timeUntilUpdate <= 0f)
             {
-                GameEvents.Instance.NextEnvironmentUpdate();
-                updatesUntilEnvironmentUpdate = environmentUpdateRate;
-            }
-            else
-            {
-                updatesUntilEnvironmentUpdate--;
+                if (updatesUntilEnvironmentUpdate <= 0)
+                {
+                    GameEvents.Instance.NextEnvironmentUpdate();
+                    updatesUntilEnvironmentUpdate = environmentUpdateRate;
+                }
+                else
+                {
+                    updatesUntilEnvironmentUpdate--;
+                }
+
+                if (updatesUntilPlayerUpdate <= 0)
+                {
+                    GameEvents.Instance.NextPlayerUpdate();
+                    updatesUntilPlayerUpdate = playerUpdateRate;
+                }
+                else
+                {
+                    updatesUntilPlayerUpdate--;
+                }
+
+                GameEvents.Instance.NextRefresh();
+
+                timeUntilUpdate = refreshRate;
             }
 
-            if (updatesUntilPlayerUpdate <= 0)
-            {
-                GameEvents.Instance.NextPlayerUpdate();
-                updatesUntilPlayerUpdate = playerUpdateRate;
-            }
-            else
-            {
-                updatesUntilPlayerUpdate--;
-            }
-
-            GameEvents.Instance.NextRefresh();
-
-            timeUntilUpdate = refreshRate;
+            GameEvents.Instance.OutOfTimeUpdate();
         }
     }
 

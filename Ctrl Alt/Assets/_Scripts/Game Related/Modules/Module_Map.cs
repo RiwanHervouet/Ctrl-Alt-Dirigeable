@@ -19,8 +19,8 @@ public class Module_Map : MonoBehaviour
     private Transform tempParent;
 
     public OOE_Map ooe_Map;
+    public MapObject mo_Player;
     public Vector2 matrixTopLeftCoordinate;
-    public Vector2 previousNextRelativePostion;
     #endregion
 
     void Awake()
@@ -41,15 +41,17 @@ public class Module_Map : MonoBehaviour
 
     void Start()
     {
-        GameEvents.Instance.onNextRefresh += UpdateMatrix;
-        InitMatrix();
-        //GameEvents.Instance.onNextPlayerUpdate += UpdateTopLeftMatrix;
+        GameEvents.Instance.OnNextRefresh += UpdateMatrix;
+        GameEvents.Instance.OnNextPlayerUpdate += UpdateTopLeftMatrix;
     }
 
     void OnDestroy()
     {
-        GameEvents.Instance.onNextRefresh -= UpdateMatrix;
-        //GameEvents.Instance.onNextPlayerUpdate -= UpdateTopLeftMatrix;
+        if (GameEvents.Instance != null)
+        {
+            GameEvents.Instance.OnNextRefresh -= UpdateMatrix;
+            GameEvents.Instance.OnNextPlayerUpdate -= UpdateTopLeftMatrix;
+        }
     }
 
     void UpdateMatrix()
@@ -70,23 +72,11 @@ public class Module_Map : MonoBehaviour
         }
     }
 
-    void InitMatrix()
-    {
-        /*
-        Debug.Log(ooe_Map);
-        Debug.Log(ooe_Map.playerMO);
-        Debug.Log(ooe_Map.playerMO.me);
-        Debug.Log(ooe_Map.playerMO.me.xPosition);
-        matrixTopLeftCoordinate = new Vector2(ooe_Map.playerMO.me.xPosition - 15, ooe_Map.playerMO.me.yPosition - 15);
-        */
-        matrixTopLeftCoordinate = new Vector2(0, 0);
-    }
-
     void UpdateTopLeftMatrix()
     {
-        //matrixTopLeftCoordinate += ooe_Map.playerMO.me.nextRelativePosition;
+        matrixTopLeftCoordinate = new Vector2(mo_Player.xPosition - 15, mo_Player.yPosition - 16);
 
-        //previousNextRelativePostion = ooe_Map.playerMO.me.nextRelativePosition; //sert quand j'adapte la caméra du à vers où se dirige le joueur
+        //previousNextRelativePostion = mo_Player.nextRelativePosition; //sert quand j'adapte la caméra du à vers où se dirige le joueur
     }
 
     bool CoordinateIsWithinTheMap(int xCoordinate, int yCoordinate)

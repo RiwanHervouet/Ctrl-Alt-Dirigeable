@@ -8,8 +8,9 @@ public static class Colors
     public static Color player { get { return GetColor(255, 255, 255); } } // white
     public static Color mountain { get { return GetColor(138, 219, 147); } } // greenish
     public static Color storm { get { return GetColor(133, 133, 133); } } // grey
-    public static Color outOfBounds { get { return GetColor(186, 40, 40); } } // red
     public static Color lightning { get { return GetColor(115, 224, 255); } } // sky blue
+    public static Color outOfBounds { get { return GetColor(186, 40, 40); } } // red
+    public static Color directionInput { get { return GetColor(0, 255, 0); } } // GREEN
 
 
 

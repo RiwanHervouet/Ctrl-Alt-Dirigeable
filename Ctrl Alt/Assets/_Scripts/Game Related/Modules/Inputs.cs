@@ -4,76 +4,119 @@ using UnityEngine;
 
 public class Inputs : MonoBehaviour
 {
-    private float selectionTime = 1f;
+    private enum inputs { UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT, ESCAPE, NULL };
+    [SerializeField][Range(0f, 4f)]
+    private float inputSelectionTime = 1f;
+
     private float currentSelectionTime = 0f;
-    private Vector2 desiredDirection;
+    private inputs desiredInput;
+    private bool pause = false;
 
 
     void Update()
     {
-        if (currentSelectionTime >= selectionTime)
+        if (currentSelectionTime >= inputSelectionTime)
         {
-            //GameEvents.Instance.onPlayerInput......
-            //nextRelativePosition = desiredDirection;
+            if (!GameTime.Instance.gameIsPaused)
+            {
+                GameEvents.Instance.OnPlayerDirectionChange += CurrentInput;
+            }
+            if (pause)
+            {
+                GameTime.Instance.gameIsPaused = GameTime.Instance.gameIsPaused ? false : true;
+                pause = false;
+            }
             currentSelectionTime = 0f;
         }
 
-        if (Input.GetButtonDown("Up"))
+        if (Input.GetButton("Up"))
         {
-            if (Input.GetButtonDown("Left"))
+            if (Input.GetButton("Left"))
             {
-                TestIfStillSameInput(new Vector2(-1, 1));
+                TestIfStillSameInput(inputs.UP_LEFT);
             }
-            else if (Input.GetButtonDown("Right"))
+            else if (Input.GetButton("Right"))
             {
-                TestIfStillSameInput(new Vector2(1, 1));
+                TestIfStillSameInput(inputs.UP_RIGHT);
             }
             else
             {
-                TestIfStillSameInput(new Vector2(0, 1));
+                TestIfStillSameInput(inputs.UP);
             }
         }
-        else if (Input.GetButtonDown("Down"))
+        else if (Input.GetButton("Down"))
         {
-            if (Input.GetButtonDown("Left"))
+            if (Input.GetButton("Left"))
             {
-                TestIfStillSameInput(new Vector2(-1, -1));
+                TestIfStillSameInput(inputs.DOWN_LEFT);
             }
-            else if (Input.GetButtonDown("Right"))
+            else if (Input.GetButton("Right"))
             {
-                TestIfStillSameInput(new Vector2(1, -1));
+                TestIfStillSameInput(inputs.DOWN_RIGHT);
             }
             else
             {
-                TestIfStillSameInput(new Vector2(0, -1));
+                TestIfStillSameInput(inputs.DOWN);
             }
-
         }
-        else if (Input.GetButtonDown("Left"))
+        else if (Input.GetButton("Left"))
         {
-            TestIfStillSameInput(new Vector2(0, -1));
+            TestIfStillSameInput(inputs.LEFT);
         }
-        else if (Input.GetButtonDown("Right"))
+        else if (Input.GetButton("Right"))
         {
-            TestIfStillSameInput(new Vector2(1, 0));
+            TestIfStillSameInput(inputs.RIGHT);
         }
         else
         {
-            desiredDirection = Vector2.zero;
+            desiredInput = inputs.NULL;
             currentSelectionTime = 0f;
+        }
+
+        if (Input.GetButton("Escape"))
+        {
+            TestIfStillSameInput(inputs.ESCAPE);
         }
     }
 
-    private void TestIfStillSameInput(Vector2 input)
+    private void TestIfStillSameInput(inputs input)
     {
-        if (desiredDirection != input)
+        if (desiredInput != input)
         {
             currentSelectionTime = 0f;
-            desiredDirection = input;
+            desiredInput = input;
         }
         else
         {
             currentSelectionTime += Time.deltaTime;
+        }
+    }
+
+    private Vector2 CurrentInput()
+    {
+        switch (desiredInput)
+        {
+            case inputs.UP:
+                return new Vector2(0, -1);
+            case inputs.DOWN:
+                return new Vector2(0, 1);
+            case inputs.LEFT:
+                return new Vector2(-1, 0);
+            case inputs.RIGHT:
+                return new Vector2(1, 0);
+            case inputs.UP_RIGHT:
+                return new Vector2(1, -1);
+            case inputs.UP_LEFT:
+                return new Vector2(-1, -1);
+            case inputs.DOWN_RIGHT:
+                return new Vector2(1, 1);
+            case inputs.DOWN_LEFT:
+                return new Vector2(-1, 1);
+            case inputs.ESCAPE:
+                pause = true;
+                return Vector2.zero;
+            default:
+                return Vector2.zero;
         }
     }
 }

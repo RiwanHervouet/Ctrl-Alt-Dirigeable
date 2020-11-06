@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class VisualHierarchy
 {
-    /*
+    /*                Si on veut changer, ça il faut aller dans OOE_Map.cs et changer l'ordre des ifs dans Overlay()
     Overlay : 
        - Confirmation d'input de direction
        - Bord de map
-       - FX (genre traits de vents tout ça)
+       - FX (genre traits de vents, dégâts pc, préparation éclair)
        - Nuages
      */
 
