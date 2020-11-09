@@ -8,6 +8,8 @@ public class MapEntity
 
     public bool inAStorm = false;
 
+    //public Vector2 wind = new Vector2(0, 0);
+
     public Color myColor 
     { 
         get { return myImage.color; }

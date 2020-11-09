@@ -93,8 +93,9 @@ public class Player : MapObject
         }
     }
 
-    void PlayerHit(List<objectType> objectHit)
+    void PlayerHit(List<objectType> objectHit) // Hit du bord de map est pas encore registered
     {
+        Debug.Log("i got hit");
         if (objectHit.Contains(objectType.mountain))
         {
             if (!alreadyGotHit)
@@ -173,10 +174,6 @@ public class Player : MapObject
         }
     }
 
-    public void RepairDirection()
-    {
-        randomDirection = false;
-    }
     Vector2 ShipTurning(Vector2 _nextRelativePositionGoal)
     {
         nextRelativePositionGoal = _nextRelativePositionGoal;
@@ -233,6 +230,10 @@ public class Player : MapObject
         {
             nextRelativePositionGoal = new Vector2(Random.Range(-1, 1), Random.Range(-1, 1));
         }
+    }
+    public void RepairDirection()
+    {
+        randomDirection = false;
     }
 
     #region Useful but not needed to be seen
