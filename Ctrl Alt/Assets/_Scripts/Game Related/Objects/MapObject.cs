@@ -7,20 +7,28 @@ public enum immaterialObjectType { underMountain, wind, lightningPrep, storm, NU
 
 public class MapObject : MonoBehaviour
 {
+    #region Initialization
     public int xPosition = 0;
     public int yPosition = 0;
 
-    public physicalObjectType type;
+    public physicalObjectType physicalType = physicalObjectType.NULL;
+    public immaterialObjectType immaterialType = immaterialObjectType.NULL;
 
     public Vector2[] graphics;
-    [Tooltip("Draw Squares between first point xy and second point xy")]
+    [Tooltip("Draw Squares between top left point xy and bottom right point xy")]
     public Vector2[] graphicsRange;
+
+    public Vector2 nextRelativePosition { 
+        get { return _nextRelativePosition; } 
+        set { if (physicalType == physicalObjectType.player) _nextRelativePosition = value; } }
+
+    #region Code related
     private Vector2[] lastGraphics;
     private int totalDotsDisplayed;
     private List<Vector2> tempList;
-
-    public Vector2 nextRelativePosition { get { return _nextRelativePosition; } set { if (type == physicalObjectType.player) _nextRelativePosition = value; } }
     private Vector2 _nextRelativePosition = Vector2.zero;
+    #endregion
+    #endregion
 
     #region Constructors
     public MapObject(int xPositionInit, int yPositionInit, physicalObjectType objectType)
@@ -28,14 +36,14 @@ public class MapObject : MonoBehaviour
         xPosition = xPositionInit;
         yPosition = yPositionInit;
 
-        type = objectType;
+        physicalType = objectType;
     }
     public MapObject(int xPositionInit, int yPositionInit, physicalObjectType objectType, Vector2 direction)
     {
         xPosition = xPositionInit;
         yPosition = yPositionInit;
 
-        type = objectType;
+        physicalType = objectType;
 
         nextRelativePosition = direction;
     }
@@ -43,7 +51,14 @@ public class MapObject : MonoBehaviour
 
     protected virtual void InitObject()
     {
-        GameEvents.Instance.OnNextEnvironmentUpdate += UpdateObject;
+        if (physicalType != physicalObjectType.player)
+        {
+            GameEvents.Instance.OnNextEnvironmentUpdate += UpdateObject;
+        }
+        else
+        {
+            GameEvents.Instance.OnNextPlayerUpdate += UpdateObject;
+        }
         totalDotsDisplayed = 0;
         tempList = new List<Vector2>();
     }
@@ -68,7 +83,7 @@ public class MapObject : MonoBehaviour
         {
             for (int i = 0; i < lastGraphics.Length; i++)
             {
-                GameManager.Instance.mapScript.fullMap[(int)lastGraphics[i].x, (int)lastGraphics[i].y].physicalObjectOnMe.Remove(type);
+                GameManager.Instance.mapScript.fullMap[(int)lastGraphics[i].x, (int)lastGraphics[i].y].physicalObjectOnMe.Remove(physicalType);
             }
         }
     }
@@ -81,13 +96,13 @@ public class MapObject : MonoBehaviour
         {
             if (CoordinateIsWithinTheMap(xPosition + (int)graphics[i].x, yPosition + (int)graphics[i].y))
             {
-                GameManager.Instance.mapScript.fullMap[xPosition + (int)graphics[i].x, yPosition + (int)graphics[i].y].physicalObjectOnMe.Add(type);
+                GameManager.Instance.mapScript.fullMap[xPosition + (int)graphics[i].x, yPosition + (int)graphics[i].y].physicalObjectOnMe.Add(physicalType);
                 totalDotsDisplayed++;
                 tempList.Add(new Vector2(xPosition + (int)graphics[i].x, yPosition + (int)graphics[i].y));
             }
             else
             {
-                if (type == physicalObjectType.player)
+                if (physicalType == physicalObjectType.player)
                 {
                     GameEvents.Instance.PlayerIsHit(new List<physicalObjectType> { physicalObjectType.NULL });
                 }
@@ -101,9 +116,9 @@ public class MapObject : MonoBehaviour
                 {
                     if (CoordinateIsWithinTheMap(xPosition + (int)graphicsRange[k * 2].x + i, yPosition + (int)graphicsRange[k * 2].y + j))
                     {
-                        if (GameManager.Instance.mapScript.fullMap[xPosition + (int)graphicsRange[k * 2].x + i, yPosition + (int)graphicsRange[k * 2].y + j].physicalObjectOnMe.Contains(type) == false)
+                        if (GameManager.Instance.mapScript.fullMap[xPosition + (int)graphicsRange[k * 2].x + i, yPosition + (int)graphicsRange[k * 2].y + j].physicalObjectOnMe.Contains(physicalType) == false)
                         {
-                            GameManager.Instance.mapScript.fullMap[xPosition + (int)graphicsRange[k * 2].x + i, yPosition + (int)graphicsRange[k * 2].y + j].physicalObjectOnMe.Add(type);
+                            GameManager.Instance.mapScript.fullMap[xPosition + (int)graphicsRange[k * 2].x + i, yPosition + (int)graphicsRange[k * 2].y + j].physicalObjectOnMe.Add(physicalType);
                             totalDotsDisplayed++;
                             tempList.Add(new Vector2(xPosition + (int)graphicsRange[k * 2].x + i, yPosition + (int)graphicsRange[k * 2].y + j));
                         }

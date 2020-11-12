@@ -48,8 +48,15 @@ public class GameEvents : Singleton<GameEvents>
     #endregion
 
     #region Methods related to events
+    public bool resetDirectionChangeDelegate = false;
     public Vector2 PlayerDirectionChange()
     {
+        Problème de direction qui register pas correctement...
+        if (resetDirectionChangeDelegate)
+        {
+            OnPlayerDirectionChange = null;
+            resetDirectionChangeDelegate = false;
+        }
         if (OnPlayerDirectionChange != null)
         {
             return OnPlayerDirectionChange();

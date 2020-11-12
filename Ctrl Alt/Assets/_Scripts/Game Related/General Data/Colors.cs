@@ -31,7 +31,7 @@ public static class Colors
 
 
     // Other color related data
-    public static float completedInputFadeOutTime { get { return 1f; } }
+    public static float completedInputFadeOutTime { get { return 1.5f; } }
 
     #region color methods
     public static Color GetColor(float red, float green, float blue)

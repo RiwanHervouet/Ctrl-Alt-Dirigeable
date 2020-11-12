@@ -6,11 +6,10 @@ using UnityEngine.UIElements;
 public class Inputs : MonoBehaviour
 {
     public enum inputs { UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT, ESCAPE, NULL };
-    [SerializeField][Range(0f, 4f)]
-    private float inputSelectionTime = 1f;
 
     private float currentSelectionTime = 0f;
     private inputs desiredInput;
+    private Vector2 lastInput = Vector2.zero;
     private bool pause = false;
 
 
@@ -18,22 +17,6 @@ public class Inputs : MonoBehaviour
     {
         if (GameManager.Instance.canReceiveInput)
         {
-            GameEvents.Instance.MapInputCompletion(currentSelectionTime / inputSelectionTime, desiredInput);
-            if (currentSelectionTime >= inputSelectionTime)
-            {
-                if (!GameTime.Instance.gameIsPaused)
-                {
-                    GameEvents.Instance.OnPlayerDirectionChange += CurrentInput;
-                    GameEvents.Instance.MapInputCompleted();
-                }
-                if (pause)
-                {
-                    GameTime.Instance.gameIsPaused = GameTime.Instance.gameIsPaused ? false : true;
-                    pause = false;
-                }
-                currentSelectionTime = 0f;
-            }
-
             if (Input.GetButton("Up"))
             {
                 if (Input.GetButton("Left"))
@@ -81,6 +64,28 @@ public class Inputs : MonoBehaviour
             if (Input.GetButton("Escape"))
             {
                 TestIfStillSameInput(inputs.ESCAPE);
+            }
+
+
+            GameEvents.Instance.MapInputCompletion(currentSelectionTime / GameManager.Instance.inputSelectionTime, desiredInput);
+            if (currentSelectionTime >= GameManager.Instance.inputSelectionTime)
+            {
+                if (!GameTime.Instance.gameIsPaused)
+                {
+                    if (CurrentInput() != lastInput)
+                    {
+                        Debug.Log("input changed : " + CurrentInput());
+                        GameEvents.Instance.OnPlayerDirectionChange += CurrentInput;
+                        GameEvents.Instance.MapInputCompleted();
+                        lastInput = CurrentInput();
+                    }
+                }
+                if (pause)
+                {
+                    GameTime.Instance.gameIsPaused = GameTime.Instance.gameIsPaused ? false : true;
+                    pause = false;
+                }
+                currentSelectionTime = 0f;
             }
         }
     }

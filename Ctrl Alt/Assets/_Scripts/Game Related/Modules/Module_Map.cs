@@ -20,7 +20,6 @@ public class Module_Map : MonoBehaviour
     private float fadeOutStartTime;
     private Color tempColor;
 
-    public OOE_Map ooe_Map;
     public MapObject mo_Player;
     public Vector2 matrixTopLeftCoordinate;
     #endregion
@@ -28,8 +27,6 @@ public class Module_Map : MonoBehaviour
     void Awake()
     {
         matrixParent = gameObject.GetComponent<Transform>();
-
-        ooe_Map = transform.parent.GetChild(2).GetComponent<OOE_Map>();
 
         for (int j = 0; j < matrix.GetLength(1); j++)
         {
@@ -68,7 +65,7 @@ public class Module_Map : MonoBehaviour
             {
                 if (CoordinateIsWithinTheMap(i + (int)matrixTopLeftCoordinate.x, j + (int)matrixTopLeftCoordinate.y))
                 {
-                    matrix[i, j].color = ooe_Map.fullMap[i + (int)matrixTopLeftCoordinate.x, j + (int)matrixTopLeftCoordinate.y].myColor;
+                    matrix[i, j].color = GameManager.Instance.mapScript.fullMap[i + (int)matrixTopLeftCoordinate.x, j + (int)matrixTopLeftCoordinate.y].myColor;
                 }
                 else
                 {
@@ -284,7 +281,7 @@ public class Module_Map : MonoBehaviour
                         (int)clockwiseOuterMatrixPoints[i].x + (int)matrixTopLeftCoordinate.x,
                         (int)clockwiseOuterMatrixPoints[i].y + (int)matrixTopLeftCoordinate.y))
                 {
-                    tempColor = ooe_Map.fullMap[
+                    tempColor = GameManager.Instance.mapScript.fullMap[
                             (int)clockwiseOuterMatrixPoints[i].x + (int)matrixTopLeftCoordinate.x,
                             (int)clockwiseOuterMatrixPoints[i].y + (int)matrixTopLeftCoordinate.y
                             ].myColor;
@@ -310,11 +307,11 @@ public class Module_Map : MonoBehaviour
     {
         if (xCoordinate > 0)
 
-            if (xCoordinate < ooe_Map.fullMap.GetLength(0))
+            if (xCoordinate < GameManager.Instance.mapScript.fullMap.GetLength(0))
 
                 if (yCoordinate > 0)
 
-                    if (yCoordinate < ooe_Map.fullMap.GetLength(1))
+                    if (yCoordinate < GameManager.Instance.mapScript.fullMap.GetLength(1))
 
                         return true;
 

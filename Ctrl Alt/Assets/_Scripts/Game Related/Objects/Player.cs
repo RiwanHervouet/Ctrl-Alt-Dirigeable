@@ -15,7 +15,7 @@ public class Player : MapObject
     {
         xPosition = GameManager.Instance.xPlayerSpawn;
         yPosition = GameManager.Instance.yPlayerSpawn;
-        type = physicalObjectType.player;
+        physicalType = physicalObjectType.player;
 
         #region Intialization
         alreadyGotHit = true;
@@ -175,6 +175,10 @@ public class Player : MapObject
 
     Vector2 ShipTurning(Vector2 _nextRelativePositionGoal)
     {
+        if(nextRelativePosition != _nextRelativePositionGoal)
+        {
+            GameEvents.Instance.resetDirectionChangeDelegate = true;
+        }
         nextRelativePositionGoal = _nextRelativePositionGoal;
 
         if (randomDirection) RandomizeDirection();
