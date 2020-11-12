@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     public OOE_Map mapScript;
+    public bool canReceiveInput = true;
 
     [Header("Player Data")]
     public int xPlayerSpawn;

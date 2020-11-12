@@ -17,6 +17,8 @@ public class Module_Map : MonoBehaviour
 
     private Transform matrixParent;
     private Transform tempParent;
+    private float fadeOutStartTime;
+    private Color tempColor;
 
     public OOE_Map ooe_Map;
     public MapObject mo_Player;
@@ -44,6 +46,7 @@ public class Module_Map : MonoBehaviour
         GameEvents.Instance.OnNextRefresh += UpdateMatrix;
         GameEvents.Instance.OnNextPlayerUpdate += UpdateTopLeftMatrix;
         GameEvents.Instance.OnMapInputCompletion += DrawInputCompletion;
+        GameEvents.Instance.OnMapInputCompleted += InputCompletedFadeOut;
     }
 
     void OnDestroy()
@@ -53,6 +56,7 @@ public class Module_Map : MonoBehaviour
             GameEvents.Instance.OnNextRefresh -= UpdateMatrix;
             GameEvents.Instance.OnNextPlayerUpdate -= UpdateTopLeftMatrix;
             GameEvents.Instance.OnMapInputCompletion -= DrawInputCompletion;
+            GameEvents.Instance.OnMapInputCompleted -= InputCompletedFadeOut;
         }
     }
 
@@ -242,7 +246,64 @@ public class Module_Map : MonoBehaviour
                 break;
         }
 
-        ohDamnUneErreur!;
+        int numberOfLEDsLit = Mathf.CeilToInt(clockwiseOuterMatrixPoints.Length * inputCompletion);
+        for (int i = 0; i < Mathf.FloorToInt(numberOfLEDsLit * 0.5f); i++)
+        {
+            outerPointsIndexCounterClockwise = outerPointsIndexStart - i < 0 ?
+                outerPointsIndexStart - i + clockwiseOuterMatrixPoints.Length :
+                outerPointsIndexStart - i;
+            outerPointsIndexClockwise = outerPointsIndexStart + i > clockwiseOuterMatrixPoints.Length - 1 ?
+                outerPointsIndexStart + i - clockwiseOuterMatrixPoints.Length :
+                outerPointsIndexStart + i;
+
+            matrix[
+                (int)clockwiseOuterMatrixPoints[outerPointsIndexCounterClockwise].x, 
+                (int)clockwiseOuterMatrixPoints[outerPointsIndexCounterClockwise].y
+                ].color = Colors.directionInput;
+            matrix[
+                (int)clockwiseOuterMatrixPoints[outerPointsIndexClockwise].x, 
+                (int)clockwiseOuterMatrixPoints[outerPointsIndexClockwise].y
+                ].color = Colors.directionInput;
+        }
+    }
+
+    void InputCompletedFadeOut()
+    {
+        fadeOutStartTime = Time.time;
+        GameManager.Instance.canReceiveInput = false;
+        StartCoroutine(CompleteFadeOut());
+    }
+
+    IEnumerator CompleteFadeOut()
+    {
+        while ((Time.time - fadeOutStartTime) / Colors.completedInputFadeOutTime < 1)
+        {
+            for (int i = 0; i < clockwiseOuterMatrixPoints.Length; i++)
+            {
+                if (CoordinateIsWithinTheMap(
+                        (int)clockwiseOuterMatrixPoints[i].x + (int)matrixTopLeftCoordinate.x,
+                        (int)clockwiseOuterMatrixPoints[i].y + (int)matrixTopLeftCoordinate.y))
+                {
+                    tempColor = ooe_Map.fullMap[
+                            (int)clockwiseOuterMatrixPoints[i].x + (int)matrixTopLeftCoordinate.x,
+                            (int)clockwiseOuterMatrixPoints[i].y + (int)matrixTopLeftCoordinate.y
+                            ].myColor;
+                }
+                else
+                {
+                    tempColor = Colors.outOfBounds;
+                }
+
+                matrix[(int)clockwiseOuterMatrixPoints[i].x, (int)clockwiseOuterMatrixPoints[i].y].color = Color.Lerp(
+                   Colors.directionInput,
+                   tempColor,
+                   (Time.time - fadeOutStartTime) / Colors.completedInputFadeOutTime);
+            }
+            yield return new WaitForFixedUpdate();
+        }
+
+        GameManager.Instance.canReceiveInput = true;
+        StopCoroutine(CompleteFadeOut());
     }
 
     bool CoordinateIsWithinTheMap(int xCoordinate, int yCoordinate)

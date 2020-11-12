@@ -78,7 +78,9 @@ public class GameEvents : Singleton<GameEvents>
     #region Output related
     #region Events
     public event Action<float, Inputs.inputs> OnMapInputCompletion;
+    public event Action OnMapInputCompleted;
     #endregion
+
     #region Methods related to events
     public void MapInputCompletion(float inputCompletionPercentage, Inputs.inputs input)
     {
@@ -86,6 +88,11 @@ public class GameEvents : Singleton<GameEvents>
         {
             OnMapInputCompletion(inputCompletionPercentage, input);
         }
+    }
+
+    public void MapInputCompleted()
+    {
+        OnMapInputCompleted?.Invoke();
     }
     #endregion
     #endregion

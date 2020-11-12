@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Inputs : MonoBehaviour
 {
@@ -15,69 +16,72 @@ public class Inputs : MonoBehaviour
 
     void Update()
     {
-        GameEvents.Instance.MapInputCompletion(currentSelectionTime / inputSelectionTime, desiredInput);
-
-        if (currentSelectionTime >= inputSelectionTime)
+        if (GameManager.Instance.canReceiveInput)
         {
-            if (!GameTime.Instance.gameIsPaused)
+            GameEvents.Instance.MapInputCompletion(currentSelectionTime / inputSelectionTime, desiredInput);
+            if (currentSelectionTime >= inputSelectionTime)
             {
-                GameEvents.Instance.OnPlayerDirectionChange += CurrentInput;
+                if (!GameTime.Instance.gameIsPaused)
+                {
+                    GameEvents.Instance.OnPlayerDirectionChange += CurrentInput;
+                    GameEvents.Instance.MapInputCompleted();
+                }
+                if (pause)
+                {
+                    GameTime.Instance.gameIsPaused = GameTime.Instance.gameIsPaused ? false : true;
+                    pause = false;
+                }
+                currentSelectionTime = 0f;
             }
-            if (pause)
-            {
-                GameTime.Instance.gameIsPaused = GameTime.Instance.gameIsPaused ? false : true;
-                pause = false;
-            }
-            currentSelectionTime = 0f;
-        }
 
-        if (Input.GetButton("Up"))
-        {
-            if (Input.GetButton("Left"))
+            if (Input.GetButton("Up"))
             {
-                TestIfStillSameInput(inputs.UP_LEFT);
+                if (Input.GetButton("Left"))
+                {
+                    TestIfStillSameInput(inputs.UP_LEFT);
+                }
+                else if (Input.GetButton("Right"))
+                {
+                    TestIfStillSameInput(inputs.UP_RIGHT);
+                }
+                else
+                {
+                    TestIfStillSameInput(inputs.UP);
+                }
+            }
+            else if (Input.GetButton("Down"))
+            {
+                if (Input.GetButton("Left"))
+                {
+                    TestIfStillSameInput(inputs.DOWN_LEFT);
+                }
+                else if (Input.GetButton("Right"))
+                {
+                    TestIfStillSameInput(inputs.DOWN_RIGHT);
+                }
+                else
+                {
+                    TestIfStillSameInput(inputs.DOWN);
+                }
+            }
+            else if (Input.GetButton("Left"))
+            {
+                TestIfStillSameInput(inputs.LEFT);
             }
             else if (Input.GetButton("Right"))
             {
-                TestIfStillSameInput(inputs.UP_RIGHT);
+                TestIfStillSameInput(inputs.RIGHT);
             }
             else
             {
-                TestIfStillSameInput(inputs.UP);
+                desiredInput = inputs.NULL;
+                currentSelectionTime = 0f;
             }
-        }
-        else if (Input.GetButton("Down"))
-        {
-            if (Input.GetButton("Left"))
-            {
-                TestIfStillSameInput(inputs.DOWN_LEFT);
-            }
-            else if (Input.GetButton("Right"))
-            {
-                TestIfStillSameInput(inputs.DOWN_RIGHT);
-            }
-            else
-            {
-                TestIfStillSameInput(inputs.DOWN);
-            }
-        }
-        else if (Input.GetButton("Left"))
-        {
-            TestIfStillSameInput(inputs.LEFT);
-        }
-        else if (Input.GetButton("Right"))
-        {
-            TestIfStillSameInput(inputs.RIGHT);
-        }
-        else
-        {
-            desiredInput = inputs.NULL;
-            currentSelectionTime = 0f;
-        }
 
-        if (Input.GetButton("Escape"))
-        {
-            TestIfStillSameInput(inputs.ESCAPE);
+            if (Input.GetButton("Escape"))
+            {
+                TestIfStillSameInput(inputs.ESCAPE);
+            }
         }
     }
 
