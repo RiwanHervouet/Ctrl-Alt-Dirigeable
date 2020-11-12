@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Inputs : MonoBehaviour
 {
-    private enum inputs { UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT, ESCAPE, NULL };
+    public enum inputs { UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT, ESCAPE, NULL };
     [SerializeField][Range(0f, 4f)]
     private float inputSelectionTime = 1f;
 
@@ -15,6 +15,8 @@ public class Inputs : MonoBehaviour
 
     void Update()
     {
+        GameEvents.Instance.MapInputCompletion(currentSelectionTime / inputSelectionTime, desiredInput);
+
         if (currentSelectionTime >= inputSelectionTime)
         {
             if (!GameTime.Instance.gameIsPaused)

@@ -43,7 +43,7 @@ public class GameEvents : Singleton<GameEvents>
     #region Input related
     #region Events
     public event Func<Vector2> OnPlayerDirectionChange;
-    public event Action<List<objectType>> OnPlayerGettingHit;
+    public event Action<List<physicalObjectType>> OnPlayerGettingHit;
     public event Action OnShipRepaired;
     #endregion
 
@@ -58,7 +58,7 @@ public class GameEvents : Singleton<GameEvents>
         return Vector2.zero;
     }
 
-    public void PlayerIsHit(List<objectType> objectHit)
+    public void PlayerIsHit(List<physicalObjectType> objectHit)
     {
         if (OnPlayerGettingHit != null)
         {
@@ -69,6 +69,23 @@ public class GameEvents : Singleton<GameEvents>
     public void RepairShip() //not called yet
     {
         OnShipRepaired?.Invoke();
+    }
+    #endregion
+    #endregion
+
+
+
+    #region Output related
+    #region Events
+    public event Action<float, Inputs.inputs> OnMapInputCompletion;
+    #endregion
+    #region Methods related to events
+    public void MapInputCompletion(float inputCompletionPercentage, Inputs.inputs input)
+    {
+        if (OnMapInputCompletion != null)
+        {
+            OnMapInputCompletion(inputCompletionPercentage, input);
+        }
     }
     #endregion
     #endregion

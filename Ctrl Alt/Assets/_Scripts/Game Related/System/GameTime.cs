@@ -52,7 +52,7 @@ public class GameTime : Singleton<GameTime>
             timeUntilUpdate -= Time.deltaTime;
             if (timeUntilUpdate <= 0f)
             {
-                if (updatesUntilEnvironmentUpdate <= 0)
+                if (updatesUntilEnvironmentUpdate <= 1)
                 {
                     GameEvents.Instance.NextEnvironmentUpdate();
                     updatesUntilEnvironmentUpdate = environmentUpdateRate;
@@ -62,7 +62,7 @@ public class GameTime : Singleton<GameTime>
                     updatesUntilEnvironmentUpdate--;
                 }
 
-                if (updatesUntilPlayerUpdate <= 0)
+                if (updatesUntilPlayerUpdate <= 1)
                 {
                     GameEvents.Instance.NextPlayerUpdate();
                     updatesUntilPlayerUpdate = playerUpdateRate;
@@ -78,6 +78,20 @@ public class GameTime : Singleton<GameTime>
             }
 
             GameEvents.Instance.OutOfTimeUpdate();
+        }
+
+        //to delete
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            ChangePlayerUpdateRate(playerSpeed.FAST);
+        }
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            ChangePlayerUpdateRate(playerSpeed.MEDIUM);
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            ChangePlayerUpdateRate(playerSpeed.SLOW);
         }
     }
 

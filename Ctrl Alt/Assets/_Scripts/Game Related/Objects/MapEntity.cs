@@ -4,9 +4,9 @@ using UnityEngine.UI;
 
 public class MapEntity
 {
-    public List<objectType> objectVisualOnMe = new List<objectType>();
+    public List<physicalObjectType> physicalObjectOnMe = new List<physicalObjectType>();
 
-    public bool inAStorm = false;
+    public List<immaterialObjectType> immaterialObjectOnMe = new List<immaterialObjectType>();
 
     //public Vector2 wind = new Vector2(0, 0);
 

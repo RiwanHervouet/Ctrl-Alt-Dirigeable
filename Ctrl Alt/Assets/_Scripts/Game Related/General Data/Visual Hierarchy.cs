@@ -4,19 +4,26 @@ using UnityEngine;
 
 public class VisualHierarchy
 {
-    /*                Si on veut changer, ça il faut aller dans OOE_Map.cs et changer l'ordre des ifs dans Overlay()
+    /*Si on veut changer, ça il faut aller dans OOE_Map.cs et changer l'ordre des ifs dans Overlay()
     Overlay : 
        - Confirmation d'input de direction
        - Bord de map
        - FX (genre traits de vents, dégâts pc, préparation éclair)
        - Nuages
      */
-
-    public static objectType[] objectHierarchy =
+    public static immaterialObjectType[] immaterialObjectHierarchy =
     {
-        objectType.player,
-        objectType.lightning,
-        objectType.mountain
+        immaterialObjectType.storm,
+        immaterialObjectType.lightningPrep,
+        immaterialObjectType.wind,
+        immaterialObjectType.underMountain
+    };
+
+    public static physicalObjectType[] physicalObjectHierarchy =
+    {
+        physicalObjectType.player,
+        physicalObjectType.lightning,
+        physicalObjectType.mountain
     };
     /*- Objet avec altitude moindre
 

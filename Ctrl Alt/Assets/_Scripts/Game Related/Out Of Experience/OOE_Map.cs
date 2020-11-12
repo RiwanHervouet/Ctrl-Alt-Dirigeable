@@ -29,6 +29,7 @@ public class OOE_Map : MonoBehaviour
 
     Transform tempParent;
     Color tempColor;
+    bool underMountainWasDisplayed = false;
 
     #endregion
 
@@ -76,18 +77,29 @@ public class OOE_Map : MonoBehaviour
 
     private Color DisplayRightColor(MapEntity mapPoint)
     {
-        if (mapPoint.objectVisualOnMe.Count > 0)
+        #region Display Mountain under my altitude
+        underMountainWasDisplayed = false;
+        if (mapPoint.immaterialObjectOnMe.Contains(immaterialObjectType.underMountain))
         {
-            if (mapPoint.objectVisualOnMe.Count > 1)
+            underMountainWasDisplayed = true;
+            tempColor = Color.Lerp(Colors.mountain, Color.black, Colors.underMountainAlpha);
+        }
+        #endregion
+        if (mapPoint.physicalObjectOnMe.Count > 0)
+        {
+            if (mapPoint.physicalObjectOnMe.Count > 1)
             {
-                GameEvents.Instance.PlayerIsHit(mapPoint.objectVisualOnMe); 
+                if(mapPoint.physicalObjectOnMe.Contains(physicalObjectType.player))
+                {
+                    GameEvents.Instance.PlayerIsHit(mapPoint.physicalObjectOnMe);
+                }
             }
             int indexObjectToDisplay = 1000;
-            for (int i = 0; i < mapPoint.objectVisualOnMe.Count; i++)
+            for (int i = 0; i < mapPoint.physicalObjectOnMe.Count; i++)
             {
-                for (int j = 0; j < VisualHierarchy.objectHierarchy.Length; j++)
+                for (int j = 0; j < VisualHierarchy.physicalObjectHierarchy.Length; j++)
                 {
-                    if (mapPoint.objectVisualOnMe[i] == VisualHierarchy.objectHierarchy[j])
+                    if (mapPoint.physicalObjectOnMe[i] == VisualHierarchy.physicalObjectHierarchy[j])
                     {
                         indexObjectToDisplay = j < indexObjectToDisplay ? j : indexObjectToDisplay;
                         break;
@@ -95,15 +107,15 @@ public class OOE_Map : MonoBehaviour
                 }
             }
 
-            switch (VisualHierarchy.objectHierarchy[indexObjectToDisplay])
+            switch (VisualHierarchy.physicalObjectHierarchy[indexObjectToDisplay])
             {
-                case objectType.mountain:
+                case physicalObjectType.mountain:
                     tempColor = Colors.mountain;
                     break;
-                case objectType.player:
+                case physicalObjectType.player:
                     tempColor = Colors.player;
                     break;
-                case objectType.lightning:
+                case physicalObjectType.lightning:
                     tempColor = Colors.lightning;
                     break;
                 default:
@@ -112,7 +124,8 @@ public class OOE_Map : MonoBehaviour
         }
         else
         {
-            tempColor = mapPoint.BaseColor;
+            if(!underMountainWasDisplayed)
+                tempColor = mapPoint.BaseColor;
         }
 
         return Overlay(mapPoint, tempColor);
@@ -120,16 +133,32 @@ public class OOE_Map : MonoBehaviour
 
     private Color Overlay(MapEntity mapPoint, Color currentColor)
     {
-        if (mapPoint.inAStorm)
+        if (mapPoint.immaterialObjectOnMe.Count > 0)
         {
-            currentColor = Color.Lerp(currentColor, Colors.storm, Colors.stormAlpha);
+            int index = 0;
+            for (int i = 0; i < VisualHierarchy.immaterialObjectHierarchy.Length; i++)
+            {
+                index = VisualHierarchy.immaterialObjectHierarchy.Length - i - 1;
+                if (mapPoint.immaterialObjectOnMe.Contains(VisualHierarchy.immaterialObjectHierarchy[index]))
+                {
+                    switch (VisualHierarchy.immaterialObjectHierarchy[index])
+                    {
+                        case immaterialObjectType.wind:
+                            currentColor = Color.Lerp(currentColor, Colors.wind, Colors.windAlpha);
+                            break;
+                        case immaterialObjectType.lightningPrep:
+                            currentColor = Color.Lerp(currentColor, Colors.lightningPrep, Colors.lightningPrepAlpha);
+                            break;
+                        case immaterialObjectType.storm:
+                            currentColor = Color.Lerp(currentColor, Colors.storm, Colors.stormAlpha);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
         }
-        /*
-        if (mapPoint.windFX)
-        {
-            currentColor = Color.Lerp(currentColor, Colors.storm, Colors.stormAlpha);
-        }
-        */
+
         if (mapPoint.edgeOfMapDistance < Colors.almostOutOfBounds.Length)
         {
             currentColor = Color.Lerp(currentColor, Colors.outOfBounds, Colors.almostOutOfBounds[mapPoint.edgeOfMapDistance]);

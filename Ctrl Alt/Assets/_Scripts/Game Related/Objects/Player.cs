@@ -15,7 +15,7 @@ public class Player : MapObject
     {
         xPosition = GameManager.Instance.xPlayerSpawn;
         yPosition = GameManager.Instance.yPlayerSpawn;
-        type = objectType.player;
+        type = physicalObjectType.player;
 
         #region Intialization
         alreadyGotHit = true;
@@ -93,10 +93,9 @@ public class Player : MapObject
         }
     }
 
-    void PlayerHit(List<objectType> objectHit) // Hit du bord de map est pas encore registered
+    void PlayerHit(List<physicalObjectType> objectHit) // Hit du bord de map est pas encore registered
     {
-        Debug.Log("i got hit");
-        if (objectHit.Contains(objectType.mountain))
+        if (objectHit.Contains(physicalObjectType.mountain))
         {
             if (!alreadyGotHit)
             {
@@ -114,7 +113,7 @@ public class Player : MapObject
                 }
             }
         }
-        else if (objectHit.Contains(objectType.lightning)) /////////////////////////////////////// pas encore discuté
+        else if (objectHit.Contains(physicalObjectType.lightning)) /////////////////////////////////////// pas encore discuté
         {
             if (!alreadyGotHit)
             {
@@ -126,7 +125,7 @@ public class Player : MapObject
         {
             if (yPosition < 1)
             {
-                xPosition = 5;
+                yPosition = 5;
                 nextRelativePosition = new Vector2(0, 1);
                 nextRelativePositionGoal = nextRelativePosition;
             }
@@ -237,7 +236,7 @@ public class Player : MapObject
     }
 
     #region Useful but not needed to be seen
-    public Player(int xPositionInit, int yPositionInit, objectType objectType) : base(xPositionInit, yPositionInit, objectType)
+    public Player(int xPositionInit, int yPositionInit, physicalObjectType objectType) : base(xPositionInit, yPositionInit, objectType)
     {
 
     }
