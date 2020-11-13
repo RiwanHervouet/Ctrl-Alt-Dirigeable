@@ -51,7 +51,7 @@ public class GameEvents : Singleton<GameEvents>
     public bool resetDirectionChangeDelegate = false;
     public Vector2 PlayerDirectionChange()
     {
-        Problème de direction qui register pas correctement...
+        //Problème de direction qui register pas correctement...
         if (resetDirectionChangeDelegate)
         {
             OnPlayerDirectionChange = null;
