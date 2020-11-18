@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
 
@@ -18,9 +19,11 @@ public class MapObject : MonoBehaviour
     [Tooltip("Draw Squares between top left point xy and bottom right point xy")]
     public Vector2[] graphicsRange;
 
-    public Vector2 nextRelativePosition { 
-        get { return _nextRelativePosition; } 
-        set { if (physicalType == physicalObjectType.player) _nextRelativePosition = value; } }
+    public Vector2 nextRelativePosition
+    {
+        get { return _nextRelativePosition; }
+        set { if (physicalType == physicalObjectType.player) _nextRelativePosition = value; }
+    }
 
     #region Code related
     private Vector2[] lastGraphics;
@@ -31,21 +34,53 @@ public class MapObject : MonoBehaviour
     #endregion
 
     #region Constructors
-    public MapObject(int xPositionInit, int yPositionInit, physicalObjectType objectType)
+    public MapObject(int xPositionInit, int yPositionInit, physicalObjectType objectType, Vector2[] graphics, params Vector2[] graphicsRange)
     {
         xPosition = xPositionInit;
         yPosition = yPositionInit;
 
         physicalType = objectType;
+        immaterialType = immaterialObjectType.NULL;
+
+        this.graphics = graphics;
+        this.graphicsRange = graphicsRange;
     }
-    public MapObject(int xPositionInit, int yPositionInit, physicalObjectType objectType, Vector2 direction)
+    public MapObject(int xPositionInit, int yPositionInit, immaterialObjectType objectType, Vector2[] graphics, params Vector2[] graphicsRange)
+    {
+        xPosition = xPositionInit;
+        yPosition = yPositionInit;
+
+        immaterialType = objectType;
+        physicalType = physicalObjectType.NULL;
+
+        this.graphics = graphics;
+        this.graphicsRange = graphicsRange;
+    }
+    public MapObject(int xPositionInit, int yPositionInit, physicalObjectType objectType, Vector2 direction, Vector2[] graphics, params Vector2[] graphicsRange)
     {
         xPosition = xPositionInit;
         yPosition = yPositionInit;
 
         physicalType = objectType;
+        immaterialType = immaterialObjectType.NULL;
 
         nextRelativePosition = direction;
+
+        this.graphics = graphics;
+        this.graphicsRange = graphicsRange;
+    }
+    public MapObject(int xPositionInit, int yPositionInit, immaterialObjectType objectType, Vector2 direction, Vector2[] graphics, params Vector2[] graphicsRange)
+    {
+        xPosition = xPositionInit;
+        yPosition = yPositionInit;
+
+        immaterialType = objectType;
+        physicalType = physicalObjectType.NULL;
+
+        nextRelativePosition = direction;
+
+        this.graphics = graphics;
+        this.graphicsRange = graphicsRange;
     }
     #endregion
 
@@ -77,17 +112,24 @@ public class MapObject : MonoBehaviour
         DisplayObjectVisuals();
     }
 
-    private void ClearObjectVisuals()
+    protected void ClearObjectVisuals()
     {
         if (lastGraphics != null)
         {
             for (int i = 0; i < lastGraphics.Length; i++)
             {
-                GameManager.Instance.mapScript.fullMap[(int)lastGraphics[i].x, (int)lastGraphics[i].y].physicalObjectOnMe.Remove(physicalType);
+                if (GameManager.Instance.mapScript.fullMap[(int)lastGraphics[i].x, (int)lastGraphics[i].y].physicalObjectOnMe.Contains(physicalType))
+                {
+                    GameManager.Instance.mapScript.fullMap[(int)lastGraphics[i].x, (int)lastGraphics[i].y].physicalObjectOnMe.Remove(physicalType);
+                }
+                if (GameManager.Instance.mapScript.fullMap[(int)lastGraphics[i].x, (int)lastGraphics[i].y].immaterialObjectOnMe.Contains(immaterialType))
+                {
+                    GameManager.Instance.mapScript.fullMap[(int)lastGraphics[i].x, (int)lastGraphics[i].y].immaterialObjectOnMe.Remove(immaterialType);
+                }
             }
         }
     }
-    private void DisplayObjectVisuals()
+    protected void DisplayObjectVisuals()
     {
         totalDotsDisplayed = 0;
         tempList.Clear();
@@ -96,9 +138,18 @@ public class MapObject : MonoBehaviour
         {
             if (CoordinateIsWithinTheMap(xPosition + (int)graphics[i].x, yPosition + (int)graphics[i].y))
             {
-                GameManager.Instance.mapScript.fullMap[xPosition + (int)graphics[i].x, yPosition + (int)graphics[i].y].physicalObjectOnMe.Add(physicalType);
-                totalDotsDisplayed++;
-                tempList.Add(new Vector2(xPosition + (int)graphics[i].x, yPosition + (int)graphics[i].y));
+                if (physicalType != physicalObjectType.NULL)
+                {
+                    GameManager.Instance.mapScript.fullMap[xPosition + (int)graphics[i].x, yPosition + (int)graphics[i].y].physicalObjectOnMe.Add(physicalType);
+                    totalDotsDisplayed++;
+                    tempList.Add(new Vector2(xPosition + (int)graphics[i].x, yPosition + (int)graphics[i].y));
+                }
+                if (immaterialType != immaterialObjectType.NULL)
+                {
+                    GameManager.Instance.mapScript.fullMap[xPosition + (int)graphics[i].x, yPosition + (int)graphics[i].y].immaterialObjectOnMe.Add(immaterialType);
+                    totalDotsDisplayed++;
+                    tempList.Add(new Vector2(xPosition + (int)graphics[i].x, yPosition + (int)graphics[i].y));
+                }
             }
             else
             {
@@ -116,11 +167,23 @@ public class MapObject : MonoBehaviour
                 {
                     if (CoordinateIsWithinTheMap(xPosition + (int)graphicsRange[k * 2].x + i, yPosition + (int)graphicsRange[k * 2].y + j))
                     {
-                        if (GameManager.Instance.mapScript.fullMap[xPosition + (int)graphicsRange[k * 2].x + i, yPosition + (int)graphicsRange[k * 2].y + j].physicalObjectOnMe.Contains(physicalType) == false)
+                        if (physicalType != physicalObjectType.NULL)
                         {
-                            GameManager.Instance.mapScript.fullMap[xPosition + (int)graphicsRange[k * 2].x + i, yPosition + (int)graphicsRange[k * 2].y + j].physicalObjectOnMe.Add(physicalType);
-                            totalDotsDisplayed++;
-                            tempList.Add(new Vector2(xPosition + (int)graphicsRange[k * 2].x + i, yPosition + (int)graphicsRange[k * 2].y + j));
+                            if (GameManager.Instance.mapScript.fullMap[xPosition + (int)graphicsRange[k * 2].x + i, yPosition + (int)graphicsRange[k * 2].y + j].physicalObjectOnMe.Contains(physicalType) == false)
+                            {
+                                GameManager.Instance.mapScript.fullMap[xPosition + (int)graphicsRange[k * 2].x + i, yPosition + (int)graphicsRange[k * 2].y + j].physicalObjectOnMe.Add(physicalType);
+                                totalDotsDisplayed++;
+                                tempList.Add(new Vector2(xPosition + (int)graphicsRange[k * 2].x + i, yPosition + (int)graphicsRange[k * 2].y + j));
+                            }
+                        }
+                        if (immaterialType != immaterialObjectType.NULL)
+                        {
+                            if (GameManager.Instance.mapScript.fullMap[xPosition + (int)graphicsRange[k * 2].x + i, yPosition + (int)graphicsRange[k * 2].y + j].immaterialObjectOnMe.Contains(immaterialType) == false)
+                            {
+                                GameManager.Instance.mapScript.fullMap[xPosition + (int)graphicsRange[k * 2].x + i, yPosition + (int)graphicsRange[k * 2].y + j].immaterialObjectOnMe.Add(immaterialType);
+                                totalDotsDisplayed++;
+                                tempList.Add(new Vector2(xPosition + (int)graphicsRange[k * 2].x + i, yPosition + (int)graphicsRange[k * 2].y + j));
+                            }
                         }
                     }
                 }
@@ -142,7 +205,14 @@ public class MapObject : MonoBehaviour
     {
         if (GameEvents.Instance != null)
         {
-            GameEvents.Instance.OnNextEnvironmentUpdate -= UpdateObject;
+            if (physicalType != physicalObjectType.player)
+            {
+                GameEvents.Instance.OnNextEnvironmentUpdate -= UpdateObject;
+            }
+            else
+            {
+                GameEvents.Instance.OnNextPlayerUpdate -= UpdateObject;
+            }
             DisableObject();
         }
     }
@@ -161,5 +231,60 @@ public class MapObject : MonoBehaviour
                         return true;
 
         return false;
+    }
+}
+
+[Serializable]
+public class MapObjectConstructor// : ScriptableObject
+{
+    [Header("Type d'objet :")]
+    public physicalObjectType physicalObjectType = physicalObjectType.NULL;
+    public immaterialObjectType immaterialObjectType = immaterialObjectType.NULL;
+
+    [Header("Position lors du spawn :")]
+    public bool dependingOnPlayerPosition = false;
+    public int xSpawnPosition;
+    public int ySpawnPosition;
+
+    [Header("Désigne le mouvement qu'il fera chaque fois qu'il est update :")]
+    [Range(-1, 1)] public int xDirection = 0;
+    [Range(-1, 1)] public int yDirection = 0;
+
+    [Header("Visuels :")]
+    public allObjectShapes shape = allObjectShapes.NULL;
+    public Vector2[] additionalZone;
+    public void Init()
+    {
+        if (dependingOnPlayerPosition)
+        { 
+            xSpawnPosition += GameManager.Instance.player.xPosition;
+            ySpawnPosition += GameManager.Instance.player.yPosition;
+        }
+        if (physicalObjectType != physicalObjectType.NULL)
+        {
+            if (physicalObjectType == physicalObjectType.player)
+                Debug.LogWarning("Attention hein, je te le spawn mais tu fais pas n'importe quoi avec hein !");
+            new MapObject(xSpawnPosition, ySpawnPosition, physicalObjectType, new Vector2(xDirection, yDirection), GetShape(shape), additionalZone);
+        }
+        else if (immaterialObjectType != immaterialObjectType.NULL)
+        {
+            new MapObject(xSpawnPosition, ySpawnPosition, immaterialObjectType, new Vector2(xDirection, yDirection), GetShape(shape), additionalZone);
+        }
+        else
+        {
+            Debug.LogWarning("L'objet créé n'a pas de type, il n'existe donc pas.");
+        }
+    }
+
+    Vector2[] GetShape (allObjectShapes shape)
+    {
+        switch (shape)
+        {
+            case allObjectShapes.mountainClassic:
+                return ObjectShapes.mountainClassic;
+            default:
+                Debug.LogWarning("Il faut ajouter la forme ici avant qu'elle puisse être affichée.");
+                return new Vector2[] { Vector2.zero };
+        }
     }
 }

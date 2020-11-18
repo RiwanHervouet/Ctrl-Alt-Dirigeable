@@ -8,6 +8,7 @@ public static class Colors
     public static Color background2 { get { return GetColor(160, 82, 45); } } // light brown
     public static Color player { get { return GetColor(255, 255, 255); } } // white
     public static Color mountain { get { return GetColor(138, 219, 147); } } // greenish
+    public static Color underMountain { get { return GetColor(43, 126, 54); } } // greenish but darker
     public static Color lightning { get { return GetColor(115, 224, 255); } } // sky blue
 
 
@@ -24,7 +25,6 @@ public static class Colors
     // Some alpha values (percentage)
     public static float stormAlpha { get { return 0.65f; } }
     public static float windAlpha { get { return 0.8f; } }
-    public static float underMountainAlpha { get { return 0.8f; } } // alpha between mountain color and black
     public static float lightningPrepAlpha { get { return 0.8f; } }
     public static float[] almostOutOfBounds { get { return new float[] { 0.8f, 0.6f, 0.4f, 0.2f }; } } // Number of values is the number of cells warning the player he is near the edge of the map.
 

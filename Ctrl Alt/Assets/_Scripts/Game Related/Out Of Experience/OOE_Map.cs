@@ -82,7 +82,7 @@ public class OOE_Map : MonoBehaviour
         if (mapPoint.immaterialObjectOnMe.Contains(immaterialObjectType.underMountain))
         {
             underMountainWasDisplayed = true;
-            tempColor = Color.Lerp(Colors.mountain, Color.black, Colors.underMountainAlpha);
+            tempColor = Colors.underMountain;
         }
         #endregion
         if (mapPoint.physicalObjectOnMe.Count > 0)
@@ -107,19 +107,27 @@ public class OOE_Map : MonoBehaviour
                 }
             }
 
-            switch (VisualHierarchy.physicalObjectHierarchy[indexObjectToDisplay])
+            if (indexObjectToDisplay < VisualHierarchy.physicalObjectHierarchy.Length)
             {
-                case physicalObjectType.mountain:
-                    tempColor = Colors.mountain;
-                    break;
-                case physicalObjectType.player:
-                    tempColor = Colors.player;
-                    break;
-                case physicalObjectType.lightning:
-                    tempColor = Colors.lightning;
-                    break;
-                default:
-                    break;
+                switch (VisualHierarchy.physicalObjectHierarchy[indexObjectToDisplay])
+                {
+                    case physicalObjectType.mountain:
+                        tempColor = Colors.mountain;
+                        break;
+                    case physicalObjectType.player:
+                        tempColor = Colors.player;
+                        break;
+                    case physicalObjectType.lightning:
+                        tempColor = Colors.lightning;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                if (!underMountainWasDisplayed)
+                    tempColor = mapPoint.BaseColor;
             }
         }
         else

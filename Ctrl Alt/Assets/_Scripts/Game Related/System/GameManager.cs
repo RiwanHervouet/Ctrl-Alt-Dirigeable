@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     public OOE_Map mapScript;
+    public Player player;
     [Range(0f, 4f)] public float inputSelectionTime = 1f;
     [HideInInspector] public bool canReceiveInput = true;
 
@@ -19,6 +20,10 @@ public class GameManager : Singleton<GameManager>
         if (!mapScript)
         {
             mapScript = FindObjectOfType<OOE_Map>();
+        }
+        if (!player)
+        {
+            player = FindObjectOfType<Player>();
         }
     }
 

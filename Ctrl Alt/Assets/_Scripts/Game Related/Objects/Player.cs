@@ -240,7 +240,7 @@ public class Player : MapObject
     }
 
     #region Useful but not needed to be seen
-    public Player(int xPositionInit, int yPositionInit, physicalObjectType objectType) : base(xPositionInit, yPositionInit, objectType)
+    public Player(int xPositionInit, int yPositionInit, physicalObjectType objectType, Vector2[] graphics, params Vector2[] graphicsRange) : base(xPositionInit, yPositionInit, objectType, graphics, graphicsRange)
     {
 
     }
