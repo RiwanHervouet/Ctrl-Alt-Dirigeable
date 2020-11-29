@@ -8,7 +8,7 @@ public class MapEntity
 
     public List<immaterialObjectType> immaterialObjectOnMe = new List<immaterialObjectType>();
 
-    //public Vector2 wind = new Vector2(0, 0);
+    public Vector2 wind = Vector2.zero;
 
     public Color myColor 
     { 

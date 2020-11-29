@@ -23,9 +23,9 @@ public static class Colors
 
 
     // Some alpha values (percentage)
-    public static float stormAlpha { get { return 0.65f; } }
-    public static float windAlpha { get { return 0.8f; } }
-    public static float lightningPrepAlpha { get { return 0.8f; } }
+    public static float[] stormAlpha { get { return new float[] { 0.65f, 0.5f, 0.3f }; } } // The more you're deep in the storm, the thicker it is
+    public static float[] windAlpha { get { return new float[] { 0.6f, 0.5f, 0.4f, 0.3f, 0.2f }; } } // Number of values is number of cells making the wind animation
+    public static float[] lightningPrepAlpha { get { return new float[] { 0.6f, 0.5f, 0.3f, 0.15f, 0.1f }; } } // animation de vent
     public static float[] almostOutOfBounds { get { return new float[] { 0.8f, 0.6f, 0.4f, 0.2f }; } } // Number of values is the number of cells warning the player he is near the edge of the map.
 
 

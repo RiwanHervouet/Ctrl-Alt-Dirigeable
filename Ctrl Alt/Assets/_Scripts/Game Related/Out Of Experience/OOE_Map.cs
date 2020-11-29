@@ -30,6 +30,8 @@ public class OOE_Map : MonoBehaviour
     Transform tempParent;
     Color tempColor;
     bool underMountainWasDisplayed = false;
+    int currentHorizontalIndex = 0;
+    int currentVerticalIndex = 0;
 
     #endregion
 
@@ -65,11 +67,11 @@ public class OOE_Map : MonoBehaviour
 
     private void NextRefresh()
     {
-        for (int j = 0; j < fullMap.GetLength(1); j++)
+        for (currentVerticalIndex = 0; currentVerticalIndex < fullMap.GetLength(1); currentVerticalIndex++)
         {
-            for (int i = 0; i < fullMap.GetLength(0); i++)
+            for (currentHorizontalIndex = 0; currentHorizontalIndex < fullMap.GetLength(0); currentHorizontalIndex++)
             {
-                fullMap[i, j].myColor = DisplayRightColor(fullMap[i, j]);
+                fullMap[currentHorizontalIndex, currentVerticalIndex].myColor = DisplayRightColor(fullMap[currentHorizontalIndex, currentVerticalIndex]);
             }
         }
     }
@@ -87,11 +89,15 @@ public class OOE_Map : MonoBehaviour
         #endregion
         if (mapPoint.physicalObjectOnMe.Count > 0)
         {
-            if (mapPoint.physicalObjectOnMe.Count > 1)
+            if (mapPoint.physicalObjectOnMe.Contains(physicalObjectType.player))
             {
-                if(mapPoint.physicalObjectOnMe.Contains(physicalObjectType.player))
-                {
+                if (mapPoint.physicalObjectOnMe.Count > 1)
                     GameEvents.Instance.PlayerIsHit(mapPoint.physicalObjectOnMe);
+
+                if (mapPoint.immaterialObjectOnMe.Contains(immaterialObjectType.wind)) //Je pense vraiment pas qu'il faut faire ça dans l'affichage mais plutôt dans mapObject.
+                {
+                    GameManager.Instance.player.xPosition += (int)mapPoint.wind.x;
+                    GameManager.Instance.player.yPosition += (int)mapPoint.wind.y;
                 }
             }
             int indexObjectToDisplay = 1000;
@@ -132,7 +138,7 @@ public class OOE_Map : MonoBehaviour
         }
         else
         {
-            if(!underMountainWasDisplayed)
+            if (!underMountainWasDisplayed)
                 tempColor = mapPoint.BaseColor;
         }
 
@@ -151,14 +157,13 @@ public class OOE_Map : MonoBehaviour
                 {
                     switch (VisualHierarchy.immaterialObjectHierarchy[index])
                     {
-                        case immaterialObjectType.wind:
-                            currentColor = Color.Lerp(currentColor, Colors.wind, Colors.windAlpha);
+                        case immaterialObjectType.wind: //animations are visible, not the cloud
                             break;
                         case immaterialObjectType.lightningPrep:
-                            currentColor = Color.Lerp(currentColor, Colors.lightningPrep, Colors.lightningPrepAlpha);
+                            currentColor = Color.Lerp(currentColor, Colors.lightningPrep, Colors.lightningPrepAlpha[0]); // selon l'naimation en question
                             break;
                         case immaterialObjectType.storm:
-                            currentColor = Color.Lerp(currentColor, Colors.storm, Colors.stormAlpha);
+                            currentColor = Color.Lerp(currentColor, Colors.storm, Colors.stormAlpha[0]); //selon le nombre de coor storm autour d'elle
                             break;
                         default:
                             break;
@@ -174,6 +179,11 @@ public class OOE_Map : MonoBehaviour
 
         return currentColor;
     }
+
+    /*private int NumberOfCellsAroundMeContainingObjectType(MapEntity mapPoint, immaterialObjectType immaterialObjectTypeResearched)
+    {
+        currentHorizontalIndex
+    }*/
 
     private int DistanceToEdgeOfMap(int xCoordinate, int yCoordinate)
     {

@@ -103,4 +103,18 @@ public class GameEvents : Singleton<GameEvents>
     }
     #endregion
     #endregion
+
+
+    #region Feedback related
+    #region Events
+    public event Action OnOnMountainHitHit;
+    #endregion
+
+    #region Methods related to events
+    public void MountainHit()
+    {
+        OnOnMountainHitHit?.Invoke();
+    }
+    #endregion
+    #endregion
 }

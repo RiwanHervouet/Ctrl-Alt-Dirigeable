@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
@@ -13,10 +13,12 @@ public class MapObject : MonoBehaviour
     public int yPosition = 0;
 
     public physicalObjectType physicalType = physicalObjectType.NULL;
-    public immaterialObjectType immaterialType = immaterialObjectType.NULL;
+    public immaterialObjectType immaterialType { get { return immaterialTypeComplete[0]; } set { immaterialTypeComplete[0] = value; } }
+    //array pour les animations, immaterialTypeComplete[0] est le nombre d'éléments en + du tableau sont la valeur d'alpha à sélectionner
+    public immaterialObjectType[] immaterialTypeComplete = new immaterialObjectType[] { immaterialObjectType.NULL };
 
     public Vector2[] graphics;
-    [Tooltip("Draw Squares between top left point xy and bottom right point xy")]
+    [Tooltip("Draw Squares between top left xy point and bottom right xy point")]
     public Vector2[] graphicsRange;
 
     public Vector2 nextRelativePosition
@@ -25,7 +27,11 @@ public class MapObject : MonoBehaviour
         set { if (physicalType == physicalObjectType.player) _nextRelativePosition = value; }
     }
 
+    public Vector2 windDirection = Vector2.zero;
+
     #region Code related
+    private bool alreadyPushedPlayer = false;
+    private int windPassiveDelay = 0;
     private Vector2[] lastGraphics;
     private int totalDotsDisplayed;
     private List<Vector2> tempList;
@@ -86,9 +92,15 @@ public class MapObject : MonoBehaviour
 
     protected virtual void InitObject()
     {
+        Debug.Log("je suis "+ physicalType +" "+immaterialType, this);  
         if (physicalType != physicalObjectType.player)
         {
             GameEvents.Instance.OnNextEnvironmentUpdate += UpdateObject;
+
+            if (immaterialType == immaterialObjectType.wind)
+            {
+                GameEvents.Instance.OnNextEnvironmentUpdate += Wind;
+            }
         }
         else
         {
@@ -101,8 +113,16 @@ public class MapObject : MonoBehaviour
 
     void UpdateObjectPosition()
     {
-        xPosition += (int)nextRelativePosition.x;
-        yPosition += (int)nextRelativePosition.y;
+        if (windPassiveDelay < 0)
+        {
+            alreadyPushedPlayer = false;
+            xPosition += (int)nextRelativePosition.x;
+            yPosition += (int)nextRelativePosition.y;
+        }
+        else
+        {
+            windPassiveDelay--;
+        }
     }
 
     protected virtual void UpdateObject()
@@ -208,6 +228,11 @@ public class MapObject : MonoBehaviour
             if (physicalType != physicalObjectType.player)
             {
                 GameEvents.Instance.OnNextEnvironmentUpdate -= UpdateObject;
+
+                if (immaterialType == immaterialObjectType.wind)
+                {
+                    GameEvents.Instance.OnNextEnvironmentUpdate -= Wind;
+                }
             }
             else
             {
@@ -217,6 +242,23 @@ public class MapObject : MonoBehaviour
         }
     }
     #endregion
+
+    void Wind()
+    {
+        Debug.Log("weow");
+        for (int i = 0; i < lastGraphics.Length; i++)
+        {
+            GameManager.Instance.mapScript.fullMap[(int)lastGraphics[i].x, (int)lastGraphics[i].y].wind = windDirection; //pour les animations de vent
+            if (lastGraphics[i] == new Vector2(GameManager.Instance.player.xPosition, GameManager.Instance.player.yPosition) && !alreadyPushedPlayer)
+            {
+                Debug.Log("Vent est censé faire action");
+                GameManager.Instance.player.xPosition += (int)windDirection.x;
+                GameManager.Instance.player.yPosition += (int)windDirection.y;
+                alreadyPushedPlayer = true;
+                windPassiveDelay = GameManager.Instance.WindPassiveDelay;
+            }
+        }
+    }
 
     bool CoordinateIsWithinTheMap(int xCoordinate, int yCoordinate)
     {
@@ -253,6 +295,10 @@ public class MapObjectConstructor// : ScriptableObject
     [Header("Visuels :")]
     public allObjectShapes shape = allObjectShapes.NULL;
     public Vector2[] additionalZone;
+
+    [Header("Circumstancial options :")]
+    [Range(-1, 1)] public int xWindDirection = 0;
+    [Range(-1, 1)] public int yWindDirection = 0;
     public void Init()
     {
         if (dependingOnPlayerPosition)
@@ -263,7 +309,7 @@ public class MapObjectConstructor// : ScriptableObject
         if (physicalObjectType != physicalObjectType.NULL)
         {
             if (physicalObjectType == physicalObjectType.player)
-                Debug.LogWarning("Attention hein, je te le spawn mais tu fais pas n'importe quoi avec hein !");
+                Debug.LogError("Attention hein, je te spawn le joueur mais tu fais pas n'importe quoi avec hein !");
             new MapObject(xSpawnPosition, ySpawnPosition, physicalObjectType, new Vector2(xDirection, yDirection), GetShape(shape), additionalZone);
         }
         else if (immaterialObjectType != immaterialObjectType.NULL)
@@ -272,7 +318,7 @@ public class MapObjectConstructor// : ScriptableObject
         }
         else
         {
-            Debug.LogWarning("L'objet créé n'a pas de type, il n'existe donc pas.");
+            Debug.LogError("L'objet créé n'a pas de type, il n'existe donc pas.");
         }
     }
 
@@ -283,7 +329,7 @@ public class MapObjectConstructor// : ScriptableObject
             case allObjectShapes.mountainClassic:
                 return ObjectShapes.mountainClassic;
             default:
-                Debug.LogWarning("Il faut ajouter la forme ici avant qu'elle puisse être affichée.");
+                Debug.LogError("Il faut ajouter la forme ici avant qu'elle puisse être affichée.");
                 return new Vector2[] { Vector2.zero };
         }
     }

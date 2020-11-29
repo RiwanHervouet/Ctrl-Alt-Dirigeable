@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
+    #region Initialization
     public OOE_Map mapScript;
     public Player player;
     [Range(0f, 4f)] public float inputSelectionTime = 1f;
@@ -13,7 +14,15 @@ public class GameManager : Singleton<GameManager>
     public int xPlayerSpawn;
     public int yPlayerSpawn;
 
-    [Tooltip("Number of updates the player is invincible")] [Range(0, 10)] public int invincibilityDelay = 4;
+    [Header("Gameplay Tweaks")]
+    [SerializeField] [Tooltip("Number of updates the player is invincible")] [Range(0, 10)] private int invincibilityDelay= 4;
+    [SerializeField] [Tooltip("Number of updates the player can't be pushed by wind again")] [Range(0, 5)] private int windPassiveDelay = 0;
+
+    #region do not touch stuff
+    [HideInInspector] public int InvincibilityDelay { get { return invincibilityDelay; } }
+    [HideInInspector] public int WindPassiveDelay { get { return windPassiveDelay; } }
+    #endregion 
+    #endregion 
 
     void Init()
     {

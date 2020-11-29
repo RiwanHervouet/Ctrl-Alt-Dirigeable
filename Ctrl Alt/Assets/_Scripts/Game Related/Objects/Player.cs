@@ -100,7 +100,8 @@ public class Player : MapObject
             if (!alreadyGotHit)
             {
                 // Animation + damage effects
-                updatesUntilICanGetHitAgain = GameManager.Instance.invincibilityDelay;
+                GameEvents.Instance.MountainHit();
+                updatesUntilICanGetHitAgain = GameManager.Instance.InvincibilityDelay;
                 alreadyGotHit = true;
                 for (int i = 0; i < orthographicDirections.Length; i++)
                 {
@@ -113,7 +114,7 @@ public class Player : MapObject
                 }
             }
         }
-        else if (objectHit.Contains(physicalObjectType.lightning)) /////////////////////////////////////// pas encore discuté
+        else if (objectHit.Contains(physicalObjectType.lightning))
         {
             if (!alreadyGotHit)
             {
@@ -149,13 +150,13 @@ public class Player : MapObject
             }
             else
             {
-                Debug.LogWarning("Je suis censé avoir touché le bord de la map mais non... J'identifie probablement mal un objet.");
+                Debug.LogError("Je suis censé avoir touché le bord de la map mais non... J'identifie probablement mal un objet.");
             }
         }
 
         if (!alreadyGotHit)
         {
-            updatesUntilICanGetHitAgain = GameManager.Instance.invincibilityDelay;
+            updatesUntilICanGetHitAgain = GameManager.Instance.InvincibilityDelay;
             alreadyGotHit = true;
         }
     }
