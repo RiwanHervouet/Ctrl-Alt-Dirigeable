@@ -242,7 +242,7 @@ public class Module_Map : MonoBehaviour
                 break;
         }
 
-        ohDamnUneErreur!;
+        //ohDamnUneErreur!;
     }
 
     bool CoordinateIsWithinTheMap(int xCoordinate, int yCoordinate)
