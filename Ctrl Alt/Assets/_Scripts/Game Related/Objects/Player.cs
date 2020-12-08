@@ -8,6 +8,7 @@ public class Player : MapObject
     private int updatesUntilICanGetHitAgain;
 
     private Vector2 nextRelativePositionGoal;
+    [HideInInspector] public GameManager.altitudes nextAltitudeGoal;
 
     private Vector2[] orthographicDirections;
 
@@ -52,6 +53,7 @@ public class Player : MapObject
     protected override void UpdateObject()
     {
         nextRelativePosition = GameEvents.Instance.PlayerDirectionChange() == Vector2.zero ? ShipTurning(nextRelativePositionGoal) : ShipTurning(GameEvents.Instance.PlayerDirectionChange());
+        ChangeAltitude();
 
         AdaptGraphics();
         base.UpdateObject();
@@ -61,35 +63,35 @@ public class Player : MapObject
     {
         if (nextRelativePosition == new Vector2(1, 0))
         {
-            graphics = new Vector2[] { new Vector2(0, 0), new Vector2(-1, 0) };
+            graphicsMiddleAltitude = new Vector2[] { new Vector2(0, 0), new Vector2(-1, 0) };
         }
         else if (nextRelativePosition == new Vector2(1, 1))
         {
-            graphics = new Vector2[] { new Vector2(0, 0), new Vector2(-1, -1) };
+            graphicsMiddleAltitude = new Vector2[] { new Vector2(0, 0), new Vector2(-1, -1) };
         }
         else if (nextRelativePosition == new Vector2(1, -1))
         {
-            graphics = new Vector2[] { new Vector2(0, 0), new Vector2(-1, 1) };
+            graphicsMiddleAltitude = new Vector2[] { new Vector2(0, 0), new Vector2(-1, 1) };
         }
         else if (nextRelativePosition == new Vector2(0, 1))
         {
-            graphics = new Vector2[] { new Vector2(0, 0), new Vector2(0, -1) };
+            graphicsMiddleAltitude = new Vector2[] { new Vector2(0, 0), new Vector2(0, -1) };
         }
         else if (nextRelativePosition == new Vector2(0, -1))
         {
-            graphics = new Vector2[] { new Vector2(0, 0), new Vector2(0, 1) };
+            graphicsMiddleAltitude = new Vector2[] { new Vector2(0, 0), new Vector2(0, 1) };
         }
         else if (nextRelativePosition == new Vector2(-1, 1))
         {
-            graphics = new Vector2[] { new Vector2(0, 0), new Vector2(1, -1) };
+            graphicsMiddleAltitude = new Vector2[] { new Vector2(0, 0), new Vector2(1, -1) };
         }
         else if (nextRelativePosition == new Vector2(-1, -1))
         {
-            graphics = new Vector2[] { new Vector2(0, 0), new Vector2(1, 1) };
+            graphicsMiddleAltitude = new Vector2[] { new Vector2(0, 0), new Vector2(1, 1) };
         }
         else if (nextRelativePosition == new Vector2(-1, 0))
         {
-            graphics = new Vector2[] { new Vector2(0, 0), new Vector2(1, 0) };
+            graphicsMiddleAltitude = new Vector2[] { new Vector2(0, 0), new Vector2(1, 0) };
         }
     }
 
@@ -225,6 +227,21 @@ public class Player : MapObject
             }
         }
 
+    }
+
+    void ChangeAltitude()
+    {
+        if(nextAltitudeGoal != GameManager.Instance.currentAltitude)
+        {
+            if (GameManager.Instance.currentAltitude == GameManager.altitudes.MiddleAltitude || nextAltitudeGoal == GameManager.altitudes.MiddleAltitude)
+            {
+                GameManager.Instance.currentAltitude = nextAltitudeGoal;
+            }
+            else
+            {
+                GameManager.Instance.currentAltitude = GameManager.altitudes.MiddleAltitude;
+            }
+        }
     }
 
     private void RandomizeDirection()

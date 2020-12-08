@@ -5,12 +5,13 @@ using UnityEngine.UIElements;
 
 public class Inputs : MonoBehaviour
 {
-    public enum inputs { UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT, ESCAPE, NULL };
+    public enum inputs { UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT, ESCAPE, BOTTOMALTITUDE, MIDDLEALTITUDE, TOPALTITUDE, NULL };
 
     private float currentSelectionTime = 0f;
     private inputs desiredInput;
     private Vector2 lastInput = Vector2.zero;
     private bool pause = false;
+    private bool altitudeChange = false;
 
 
     void Update()
@@ -66,6 +67,19 @@ public class Inputs : MonoBehaviour
                 TestIfStillSameInput(inputs.ESCAPE);
             }
 
+            if(Input.GetButton("Altitude Bottom"))
+            {
+                TestIfStillSameInput(inputs.BOTTOMALTITUDE);
+            }
+            if(Input.GetButton("Altitude Middle"))
+            {
+                TestIfStillSameInput(inputs.MIDDLEALTITUDE);
+            }
+            if(Input.GetButton("Altitude Top"))
+            {
+                TestIfStillSameInput(inputs.TOPALTITUDE);
+            }
+
 
             GameEvents.Instance.MapInputCompletion(currentSelectionTime / GameManager.Instance.inputSelectionTime, desiredInput);
             if (currentSelectionTime >= GameManager.Instance.inputSelectionTime)
@@ -78,6 +92,23 @@ public class Inputs : MonoBehaviour
                         GameEvents.Instance.OnPlayerDirectionChange += CurrentInput;
                         GameEvents.Instance.MapInputCompleted();
                         lastInput = CurrentInput();
+
+                        if (altitudeChange)
+                        {
+                            if(desiredInput == inputs.MIDDLEALTITUDE)
+                            {
+                                GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.MiddleAltitude;
+                            }
+                            else if(desiredInput == inputs.TOPALTITUDE)
+                            {
+                                GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.TopAltitude;
+                            }
+                            else
+                            {
+                                GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.BottomAltitude;
+                            }
+                            altitudeChange = false;
+                        }
                     }
                 }
                 if (pause)
@@ -125,6 +156,15 @@ public class Inputs : MonoBehaviour
                 return new Vector2(-1, 1);
             case inputs.ESCAPE:
                 pause = true;
+                return Vector2.zero;
+            case inputs.BOTTOMALTITUDE:
+                altitudeChange = true;
+                return Vector2.zero;
+            case inputs.MIDDLEALTITUDE:
+                altitudeChange = true;
+                return Vector2.zero;
+            case inputs.TOPALTITUDE:
+                altitudeChange = true;
                 return Vector2.zero;
             default:
                 return Vector2.zero;
