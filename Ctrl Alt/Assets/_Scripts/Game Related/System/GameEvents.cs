@@ -350,6 +350,10 @@ public class GameEvents : Singleton<GameEvents>
 
     //Alarms
 
+    public void AlarmMapEdges()
+    {
+
+    }
     //Clickers
     public void ClickerNavigation()
     {
