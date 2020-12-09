@@ -13,6 +13,7 @@ public class GameSounds : MonoBehaviour
     public AudioClip lightningHitClip;
     public AudioClip mountainHitClip;
     public AudioClip electricalShortCircuitClip;
+    public AudioClip gameOverClip;
 
     //Modules
     public AudioClip accelerationCLip;
@@ -34,15 +35,44 @@ public class GameSounds : MonoBehaviour
     public AudioClip secondConclusionClip;
     //Second Weather
     public AudioClip secondHeavyRainClip;
-    public AudioClip secondMoutainStraightAhead;
-    public AudioClip secondLightningRisk;
-
+    public AudioClip secondMountainStraightAheadClip;
+    public AudioClip secondLightningRiskClip;
     //Second Hits
+    public AudioClip secondElectricalShortCircuitClip;
+    public AudioClip secondMountainHitClip;
+    public AudioClip secondLightningHitClip;
+    public AudioClip secondGameOverClip;
     //Second Others
+    public AudioClip secondApproachMapEdgesClip;
+    public AudioClip secondMapEdgesCrossedClip;
+    public AudioClip secondLowFuelClip;
+    public AudioClip secondOverheatingRiskClip;
+    public AudioClip secondOverheatingClip;
     //Second Reminds
-    //Second Gratifications
+    public AudioClip secondChangeDirectionClip;
+    public AudioClip secondVaryAltitudeClip;
+    public AudioClip secondAccelerateClip;
+    public AudioClip secondRemindRepairClip;
+    public AudioClip secondRemindOverheatingClip;
+    public AudioClip secondRemindGoalClip;
+    //Second Congratulations
+    public AudioClip secondCongratRepairClip;
+    public AudioClip secondCongratPowerResetClip;
+    public AudioClip secondCongratDangerAvoidClip;
+    public AudioClip secondCongratSpeedClip;
+    public AudioClip secondCongratGoalAchievedClip;
 
-    //public AudioClip shipHit1Clip;
+    //Alarms
+    public AudioClip alarmMapEdgesClip;
+    public AudioClip alarmHitClip;
+    public AudioClip alarmCriticalDamageClip;
+
+    //Clickers
+    public AudioClip clickerNavigationClip;
+    public AudioClip clickerRepairClip;
+    public AudioClip clickerAltitudeClip;
+    public AudioClip clickerAccelerationClip;
+    public AudioClip clickerDeccelerationClip;
 
     #endregion
 
@@ -52,6 +82,7 @@ public class GameSounds : MonoBehaviour
         GameEvents.Instance.OnMountainHit += PlayMountainHitSound;
         GameEvents.Instance.OnLightningHit += PlayLightningHitSound;
         GameEvents.Instance.OnElectricalShortCircuit += PlayElectricalShortCircuitSound;
+        GameEvents.Instance.OnGameOver += PlayGameOverSound;
         //GameEvents.Instance.OnShipHit1 += PlayShipHit1Sound;
 
         //Modules
@@ -74,14 +105,49 @@ public class GameSounds : MonoBehaviour
         GameEvents.Instance.OnSecondConclusion += PlaySecondConclusionSound;
         //Second Weather
         GameEvents.Instance.OnSecondHeavyRain += PlaySecondHeavyRainSound;
-        GameEvents.Instance.OnSecondMoutainStraightAhead += PlaySecondMountainStraightAheadSound;
+        GameEvents.Instance.OnSecondMountainStraightAhead += PlaySecondMountainStraightAheadSound;
         GameEvents.Instance.OnSecondLightningRisk += PlaySecondLightningRiskSound;
-        
-
+        //Second Hits
+        GameEvents.Instance.OnSecondElectricalShortCircuit += PlaySecondElectricalShortCircuitSound;
+        GameEvents.Instance.OnSecondMountainHit += PlaySecondMountainHitSound;
+        GameEvents.Instance.OnSecondLightningHit += PlaySecondLightningHitSound;
+        GameEvents.Instance.OnSecondGameOver += PlaySecondGameOverSound;
+        //Second Others
+        GameEvents.Instance.OnSecondApproachMapEdges += PlaySecondApproachMapEdgesSound;
+        GameEvents.Instance.OnSecondMapEdgesCrossed += PlaySecondMapEdgesCrossedSound;
+        GameEvents.Instance.OnSecondLowFuel += PlaySecondLowFuelSound;
+        GameEvents.Instance.OnSecondOverheatingRisk += PlaySecondOverheatingRiskSound;
+        GameEvents.Instance.OnSecondOverheating += PlaySecondOverheatingSound;
+        //Second Reminds
+        GameEvents.Instance.OnSecondChangeDirection += PlaySecondChangeDirectionSound;
+        GameEvents.Instance.OnSecondVaryAltitude += PlaySecondVaryAltitudeSound;
+        GameEvents.Instance.OnSecondAccelerate += PlaySecondAccelerateSound;
+        GameEvents.Instance.OnSecondRemindRepair += PlaySecondRemindRepairSound;
+        GameEvents.Instance.OnSecondRemindOverheating += PlaySecondRemindOverheatingSound;
+        GameEvents.Instance.OnSecondRemindGoal += PlaySecondRemindGoalSound;
+        //Second Congratulations
+        GameEvents.Instance.OnSecondCongratRepair += PlaySecondCongratRepairSound;
+        GameEvents.Instance.OnSecondCongratPowerReset += PlaySecondCongratPowerResetSound;
+        GameEvents.Instance.OnSecondCongratDangerAvoid += PlaySecondCongratDangerAvoidSound;
+        GameEvents.Instance.OnSecondCongratDangerAvoid += PlaySecondCongratDangerAvoidSound;
+        GameEvents.Instance.OnSecondCongratDangerAvoid += PlaySecondCongratDangerAvoidSound;
 
         //Alarms
-        GameEvents.Instance.OnAlarmEnabled += PlayAlarmSound;
-        GameEvents.Instance.OnShipProblemResolved += StopLoopingSound;
+        GameEvents.Instance.OnAlarmMapEdges += PlayAlarmMapEdgesSound;
+        GameEvents.Instance.OnShipIsSecure += StopLoopingSound;
+
+        GameEvents.Instance.OnAlarmHit += PlayAlarmHitSound;
+        GameEvents.Instance.OnShipIsRepaired += StopLoopingSound;
+
+        GameEvents.Instance.OnAlarmCriticalDamage += PlayAlarmCriticalDamageSound;
+        GameEvents.Instance.OnShipIsOk += StopLoopingSound;
+
+        //Clickers
+        GameEvents.Instance.OnClickerNavigation += PlayClickerNavigationSound;
+        GameEvents.Instance.OnClickerRepair += PlayClickerRepairSound;
+        GameEvents.Instance.OnClickerAltitude += PlayClickerAltitudeSound;
+        GameEvents.Instance.OnClickerAcceleration += PlayClickerAccelerationSound;
+        GameEvents.Instance.OnClickerDecceleration += PlayClickerDeccelerationSound;
     }
 
     private void OnDestroy()
@@ -92,6 +158,7 @@ public class GameSounds : MonoBehaviour
             GameEvents.Instance.OnMountainHit -= PlayMountainHitSound;
             GameEvents.Instance.OnLightningHit -= PlayMountainHitSound;
             GameEvents.Instance.OnElectricalShortCircuit -= PlayElectricalShortCircuitSound;
+            GameEvents.Instance.OnGameOver -= PlayGameOverSound;
             //GameEvents.Instance.OnShipHit1 -= PlayShipHit1Sound;
 
             //Modules
@@ -112,11 +179,51 @@ public class GameSounds : MonoBehaviour
             GameEvents.Instance.OnSecondFuel -= PlaySecondFuelSound;
             GameEvents.Instance.OnSecondGoal -= PlaySecondGoalSound;
             GameEvents.Instance.OnSecondConclusion -= PlaySecondConclusionSound;
+            //Second Weather
+            GameEvents.Instance.OnSecondHeavyRain -= PlaySecondHeavyRainSound;
+            GameEvents.Instance.OnSecondMountainStraightAhead -= PlaySecondMountainStraightAheadSound;
+            GameEvents.Instance.OnSecondLightningRisk -= PlaySecondLightningRiskSound;
+            //Second Hits
+            GameEvents.Instance.OnSecondElectricalShortCircuit -= PlaySecondElectricalShortCircuitSound;
+            GameEvents.Instance.OnSecondMountainHit -= PlaySecondMountainHitSound;
+            GameEvents.Instance.OnSecondLightningHit -= PlaySecondLightningHitSound;
+            GameEvents.Instance.OnSecondGameOver -= PlaySecondGameOverSound;
+            //Second Others
+            GameEvents.Instance.OnSecondApproachMapEdges -= PlaySecondApproachMapEdgesSound;
+            GameEvents.Instance.OnSecondMapEdgesCrossed -= PlaySecondMapEdgesCrossedSound;
+            GameEvents.Instance.OnSecondLowFuel -= PlaySecondLowFuelSound;
+            GameEvents.Instance.OnSecondOverheatingRisk -= PlaySecondOverheatingRiskSound;
+            GameEvents.Instance.OnSecondOverheating -= PlaySecondOverheatingSound;
+            //Second Reminds
+            GameEvents.Instance.OnSecondChangeDirection -= PlaySecondChangeDirectionSound;
+            GameEvents.Instance.OnSecondVaryAltitude -= PlaySecondVaryAltitudeSound;
+            GameEvents.Instance.OnSecondAccelerate -= PlaySecondAccelerateSound;
+            GameEvents.Instance.OnSecondRemindRepair -= PlaySecondRemindRepairSound;
+            GameEvents.Instance.OnSecondRemindOverheating -= PlaySecondRemindOverheatingSound;
+            GameEvents.Instance.OnSecondRemindGoal -= PlaySecondRemindGoalSound;
+            //Second Congratulations
+            GameEvents.Instance.OnSecondCongratRepair -= PlaySecondCongratRepairSound;
+            GameEvents.Instance.OnSecondCongratPowerReset -= PlaySecondCongratPowerResetSound;
+            GameEvents.Instance.OnSecondCongratDangerAvoid -= PlaySecondCongratDangerAvoidSound;
+            GameEvents.Instance.OnSecondCongratDangerAvoid -= PlaySecondCongratDangerAvoidSound;
+            GameEvents.Instance.OnSecondCongratDangerAvoid -= PlaySecondCongratDangerAvoidSound;
 
-        
+            //Alarms
+            GameEvents.Instance.OnAlarmMapEdges -= PlayAlarmMapEdgesSound;
+            GameEvents.Instance.OnShipIsSecure -= StopLoopingSound;
 
-            GameEvents.Instance.OnAlarmEnabled -= PlayAlarmSound;
-            GameEvents.Instance.OnShipProblemResolved -= StopLoopingSound;
+            GameEvents.Instance.OnAlarmHit -= PlayAlarmHitSound;
+            GameEvents.Instance.OnShipIsRepaired -= StopLoopingSound;
+
+            GameEvents.Instance.OnAlarmCriticalDamage -= PlayAlarmCriticalDamageSound;
+            GameEvents.Instance.OnShipIsOk -= StopLoopingSound;
+
+            //Clickers
+            GameEvents.Instance.OnClickerNavigation -= PlayClickerNavigationSound;
+            GameEvents.Instance.OnClickerRepair -= PlayClickerRepairSound;
+            GameEvents.Instance.OnClickerAltitude -= PlayClickerAltitudeSound;
+            GameEvents.Instance.OnClickerAcceleration -= PlayClickerAccelerationSound;
+            GameEvents.Instance.OnClickerDecceleration -= PlayClickerDeccelerationSound;
         }
     }
      
@@ -132,6 +239,10 @@ public class GameSounds : MonoBehaviour
     private void PlayElectricalShortCircuitSound()
     {
         fxSource.PlayOneShot(electricalShortCircuitClip);
+    }
+    private void PlayGameOverSound()
+    {
+        fxSource.PlayOneShot(gameOverClip);
     }
     /*private void PlaySHipHit1Sound()
     {
@@ -172,37 +283,144 @@ public class GameSounds : MonoBehaviour
     }
     private void PlaySecondAltitudeSound()
     {
-       secondSource.PlayOneShot(secondAltitudeClip)
+        secondSource.PlayOneShot(secondAltitudeClip);
     }
     private void PlaySecondNavigationSound()
     {
-        secondSource.PlayOneShot(secondNavigationClip)
+        secondSource.PlayOneShot(secondNavigationClip);
     }
     private void PlaySecondAccelerationSound()
     {
-        secondSource.PlayOneShot(secondAccelerationClip)
+        secondSource.PlayOneShot(secondAccelerationClip);
     }
     private void PlaySecondRepairSound()
     {
-        secondSource.PlayOneShot(secondRepairClip)
+        secondSource.PlayOneShot(secondRepairClip);
     }
     private void PlaySecondFuelSound()
     {
-        secondSource.PlayOneShot(secondFuelClip)
+        secondSource.PlayOneShot(secondFuelClip);
     }
     private void PlaySecondGoalSound()
     {
-        secondSource.PlayOneShot(secondGoalClip)
+        secondSource.PlayOneShot(secondGoalClip);
     }
     private void PlaySecondConclusionSound()
     {
-        secondSource.PlayOneShot(secondConclusionClip)
+        secondSource.PlayOneShot(secondConclusionClip);
     }
-
-    //Alarms
-private void PlayAlarmSound()
+    //Second Weather
+    private void PlaySecondHeavyRainSound()
     {
-        ambianceSource.clip(alarmClip);
+        secondSource.PlayOneShot(secondHeavyRainClip);
+    }
+    private void PlaySecondMountainStraightAheadSound()
+    {
+        secondSource.PlayOneShot(secondMountainStraightAheadClip);
+    }
+    private void PlaySecondLightningRiskSound()
+    {
+        secondSource.PlayOneShot(secondLightningRiskClip);
+    }
+    //Second Hits
+    private void PlaySecondElectricalShortCircuitSound()
+    {
+        secondSource.PlayOneShot(secondElectricalShortCircuitClip);
+    }
+    private void PlaySecondMountainHitSound()
+    {
+        secondSource.PlayOneShot(secondMountainHitClip);
+    }
+    private void PlaySecondLightningHitSound()
+    {
+        secondSource.PlayOneShot(secondLightningHitClip);
+    }
+    private void PlaySecondGameOverSound()
+    {
+        secondSource.PlayOneShot(secondGameOverClip);
+    }
+    //Second Others
+    private void PlaySecondApproachMapEdgesSound()
+    {
+        secondSource.PlayOneShot(secondApproachMapEdgesClip);
+    }
+    private void PlaySecondMapEdgesCrossedSound()
+    {
+        secondSource.PlayOneShot(secondMapEdgesCrossedClip);
+    }
+    private void PlaySecondLowFuelSound()
+    {
+        secondSource.PlayOneShot(secondLowFuelClip);
+    }
+    private void PlaySecondOverheatingRiskSound()
+    {
+        secondSource.PlayOneShot(secondOverheatingRiskClip);
+    }
+    private void PlaySecondOverheatingSound()
+    {
+        secondSource.PlayOneShot(secondOverheatingClip);
+    }
+    //Second Reminds
+    private void PlaySecondChangeDirectionSound()
+    {
+        secondSource.PlayOneShot(secondChangeDirectionClip);
+    }
+    private void PlaySecondVaryAltitudeSound()
+    {
+        secondSource.PlayOneShot(secondVaryAltitudeClip);
+    }
+    private void PlaySecondAccelerateSound()
+    {
+        secondSource.PlayOneShot(secondAccelerateClip);
+    }
+    private void PlaySecondRemindRepairSound()
+    {
+        secondSource.PlayOneShot(secondRemindRepairClip);
+    }
+    private void PlaySecondRemindOverheatingSound()
+    {
+        secondSource.PlayOneShot(secondRemindOverheatingClip);
+    }
+    private void PlaySecondRemindGoalSound()
+    {
+        secondSource.PlayOneShot(secondRemindGoalClip);
+    }
+    //Second Congratulations
+    private void PlaySecondCongratRepairSound()
+    {
+        secondSource.PlayOneShot(secondCongratRepairClip);
+    }
+    private void PlaySecondCongratPowerResetSound()
+    {
+        secondSource.PlayOneShot(secondCongratPowerResetClip);
+    }
+    private void PlaySecondCongratDangerAvoidSound()
+    {
+        secondSource.PlayOneShot(secondCongratDangerAvoidClip);
+    }
+    private void PlaySecondCongratSpeedSound()
+    {
+        secondSource.PlayOneShot(secondCongratSpeedClip);
+    }
+    private void PlaySecondCongratGoalAchievedSound()
+    {
+        secondSource.PlayOneShot(secondCongratGoalAchievedClip);
+    }
+    
+    //Alarms
+    private void PlayAlarmMapEdgesSound()
+    {
+        ambianceSource.clip(alarmMapEdgesClip);
+        ambianceSource.Play();
+    }
+    private void PlayAlarmHitSound()
+    {
+        ambianceSource.clip(alarmHitClip);
+        ambianceSource.Play();
+    }
+    private void PlayAlarmCriticalDamageSound()
+    {
+        ambianceSource.clip(alarmCriticalDamageClip);
         ambianceSource.Play();
     }
 
@@ -210,4 +428,27 @@ private void PlayAlarmSound()
     {
         ambianceSource.Stop();
     }
+
+    //Clickers
+    private void PlayClickerNavigationSound()
+    {
+        fxSource.PlayOneShot(clickerNavigationClip);
+    }
+    private void PlayClickerRepairSound()
+    {
+        fxSource.PlayOneShot(clickerRepairClip);
+    }
+    private void PlayClickerAltitudeSound()
+    {
+        fxSource.PlayOneShot(clickerAltitudeClip);
+    }
+    private void PlayClickerAccelerationSound()
+    {
+        fxSource.PlayOneShot(clickerAccelerationClip);
+    }
+    private void PlayClickerDeccelerationSound()
+    {
+        fxSource.PlayOneShot(clickerDeccelerationClip);
+    }
+
 }
