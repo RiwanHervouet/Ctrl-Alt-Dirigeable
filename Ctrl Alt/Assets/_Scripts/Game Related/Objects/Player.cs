@@ -40,6 +40,7 @@ public class Player : MapObject
 
         GameEvents.Instance.OnPlayerGettingHit += PlayerHit;
         GameEvents.Instance.OnNextPlayerUpdate += ResetHitCooldown;
+        GameEvents.Instance.OnJustBeforeNextPlayerUpdate += ChangeAltitude;
         GameEvents.Instance.OnShipRepaired += RepairDirection;
 
         base.InitObject();
@@ -48,12 +49,12 @@ public class Player : MapObject
     {
         GameEvents.Instance.OnPlayerGettingHit -= PlayerHit;
         GameEvents.Instance.OnNextPlayerUpdate -= ResetHitCooldown;
+        GameEvents.Instance.OnJustBeforeNextPlayerUpdate -= ChangeAltitude;
         GameEvents.Instance.OnShipRepaired -= RepairDirection;
     }
     protected override void UpdateObject()
     {
         nextRelativePosition = GameEvents.Instance.PlayerDirectionChange() == Vector2.zero ? ShipTurning(nextRelativePositionGoal) : ShipTurning(GameEvents.Instance.PlayerDirectionChange());
-        ChangeAltitude();
 
         AdaptGraphics();
         base.UpdateObject();
@@ -154,6 +155,8 @@ public class Player : MapObject
             {
                 Debug.LogError("Je suis censé avoir touché le bord de la map mais non... J'identifie probablement mal un objet.");
             }
+
+            AdaptGraphics();
         }
 
         if (!alreadyGotHit)

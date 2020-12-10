@@ -238,6 +238,15 @@ public class Module_Map : MonoBehaviour
             case Inputs.inputs.LEFT:
                 outerPointsIndexStart = 109;
                 break;
+            case Inputs.inputs.TOPALTITUDE:
+                outerPointsIndexStart = 0;
+                break;
+            case Inputs.inputs.BOTTOMALTITUDE:
+                outerPointsIndexStart = 93;
+                break;
+            case Inputs.inputs.MIDDLEALTITUDE:
+                outerPointsIndexStart = 109;
+                break;
             default:
                 inputCompletion = 0;
                 break;

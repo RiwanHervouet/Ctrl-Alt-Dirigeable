@@ -7,6 +7,7 @@ public class GameEvents : Singleton<GameEvents>
 {
     #region Updates related
     #region Events
+    public event Action OnJustBeforeNextPlayerUpdate;
     public event Action OnNextPlayerUpdate;
 
     public event Action OnNextEnvironmentUpdate;
@@ -30,6 +31,10 @@ public class GameEvents : Singleton<GameEvents>
     public void NextPlayerUpdate()
     {
         OnNextPlayerUpdate?.Invoke();
+    }
+    public void JustBeforeNextPlayerUpdate()
+    {
+        OnJustBeforeNextPlayerUpdate?.Invoke();
     }
     public void OutOfTimeUpdate()
     {

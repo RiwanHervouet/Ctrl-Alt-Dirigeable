@@ -101,9 +101,9 @@ public class MapObject : MonoBehaviour
         this.graphicsMiddleAltitude = graphics;
         this.graphicsRangeMiddleAltitude = graphicsRange;
     }
-    public MapObject(bool tisThisConstructor, int xPositionInit, int yPositionInit, immaterialObjectType objectType, Vector2[] topGraphics, Vector2[] middleGraphics, Vector2[] bottomGraphics, Vector2[] topGraphicsRange, Vector2[] middleGraphicsRange, Vector2[] bottomGraphicsRange)
+    // """Contructor""" des sous-objets 
+    public void UnderObjectInit(int xPositionInit, int yPositionInit, immaterialObjectType objectType, Vector2[] topGraphics, Vector2[] middleGraphics, Vector2[] bottomGraphics, Vector2[] topGraphicsRange, Vector2[] middleGraphicsRange, Vector2[] bottomGraphicsRange)
     {
-        bool variableInutile = tisThisConstructor;
         xPosition = xPositionInit;
         yPosition = yPositionInit;
 
@@ -130,15 +130,17 @@ public class MapObject : MonoBehaviour
             {
                 GameEvents.Instance.OnNextEnvironmentUpdate += Wind;
             }
+
+            if (physicalType == physicalObjectType.mountain)
+            {
+
+                underObject = gameObject.AddComponent<MapObject>();
+                underObject.UnderObjectInit(xPosition, yPosition, immaterialObjectType.underMountain, graphicsMiddleAltitude, graphicsBottomAltitude, new Vector2[0], graphicsRangeMiddleAltitude, graphicsRangeBottomAltitude, new Vector2[0]);
+            }
         }
         else
         {
             GameEvents.Instance.OnNextPlayerUpdate += UpdateObject;
-
-            if (physicalType == physicalObjectType.mountain)
-            {
-                underObject = new MapObject(true, xPosition, yPosition, immaterialObjectType.underMountain, graphicsMiddleAltitude, graphicsBottomAltitude, new Vector2[0], graphicsRangeMiddleAltitude, graphicsRangeBottomAltitude, new Vector2[0]);
-            }
         }
         totalDotsDisplayed = 0;
         tempList = new List<Vector2>();
@@ -190,7 +192,7 @@ public class MapObject : MonoBehaviour
         totalDotsDisplayed = 0;
         tempList.Clear();
 
-        if (currentAltitude != GameManager.Instance.currentAltitude)
+        if (currentAltitude != GameManager.Instance.currentAltitude || physicalType == physicalObjectType.player)
         {
             if (GameManager.Instance.currentAltitude == GameManager.altitudes.MiddleAltitude || (graphicsTopAltitude.Length == 0 && graphicsRangeTopAltitude.Length == 0 && graphicsBottomAltitude.Length == 0 && graphicsRangeBottomAltitude.Length == 0))
             {
@@ -267,13 +269,12 @@ public class MapObject : MonoBehaviour
 
                 }
             }
-            lastGraphics = new Vector2[totalDotsDisplayed];
-            for (int i = 0; i < totalDotsDisplayed; i++)
-            {
-                lastGraphics[i] = tempList[i];
-            }
         }
-
+        lastGraphics = new Vector2[totalDotsDisplayed];
+        for (int i = 0; i < totalDotsDisplayed; i++)
+        {
+            lastGraphics[i] = tempList[i];
+        }
     }
 
     #region Set up event related
