@@ -9,13 +9,13 @@ public class GameSounds : MonoBehaviour
     public AudioSource secondSource; // joue un son UNE FOIS
     public AudioSource ambianceSource; // loop le seul son dedans
 
-    //Hits
+    [Header("Hits")]
     public AudioClip lightningHitClip;
     public AudioClip mountainHitClip;
     public AudioClip electricalShortCircuitClip;
     public AudioClip gameOverClip;
 
-    //Modules
+    [Header("Modules")]
     public AudioClip accelerationCLip;
     public AudioClip deccelerationClip;
     public AudioClip altitudeDecliningClip;
