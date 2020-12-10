@@ -64,8 +64,10 @@ public class GameSounds : MonoBehaviour
 
     //Alarms
     public AudioClip alarmMapEdgesClip;
+    public AudioClip shipIsSecure;
     public AudioClip alarmHitClip;
-    public AudioClip alarmCriticalDamageClip;
+    public AudioClip shipIsRepaired;
+
 
     //Clickers
     public AudioClip clickerNavigationClip;
@@ -139,8 +141,9 @@ public class GameSounds : MonoBehaviour
         GameEvents.Instance.OnAlarmHit += PlayAlarmHitSound;
         GameEvents.Instance.OnShipIsRepaired += StopLoopingSound;
 
-        GameEvents.Instance.OnAlarmCriticalDamage += PlayAlarmCriticalDamageSound;
+       /* GameEvents.Instance.OnAlarmCriticalDamage += PlayAlarmCriticalDamageSound;
         GameEvents.Instance.OnShipIsOk += StopLoopingSound;
+       */
 
         //Clickers
         GameEvents.Instance.OnClickerNavigation += PlayClickerNavigationSound;
@@ -215,8 +218,7 @@ public class GameSounds : MonoBehaviour
             GameEvents.Instance.OnAlarmHit -= PlayAlarmHitSound;
             GameEvents.Instance.OnShipIsRepaired -= StopLoopingSound;
 
-            GameEvents.Instance.OnAlarmCriticalDamage -= PlayAlarmCriticalDamageSound;
-            GameEvents.Instance.OnShipIsOk -= StopLoopingSound;
+      
 
             //Clickers
             GameEvents.Instance.OnClickerNavigation -= PlayClickerNavigationSound;
@@ -418,11 +420,7 @@ public class GameSounds : MonoBehaviour
         ambianceSource.clip(alarmHitClip);
         ambianceSource.Play();
     }
-    private void PlayAlarmCriticalDamageSound()
-    {
-        ambianceSource.clip(alarmCriticalDamageClip);
-        ambianceSource.Play();
-    }
+    
 
     private void StopLoopingSound()
     {

@@ -161,7 +161,8 @@ public class GameEvents : Singleton<GameEvents>
     public event Action OnSecondCongratGoalAchieved;
 
     //Alarms
-
+    public event Action OnAlarmMapEdges;
+    public event Action OnAlarmHit;
 
     //Clickers
     public event Action OnClickerNavigation;
@@ -352,8 +353,13 @@ public class GameEvents : Singleton<GameEvents>
 
     public void AlarmMapEdges()
     {
-
+        OnAlarmMapEdges?.Invoke();
     }
+    public void AlarmHitSound()
+    {
+        OnAlarmHit?.Invoke();
+    }
+   
     //Clickers
     public void ClickerNavigation()
     {
