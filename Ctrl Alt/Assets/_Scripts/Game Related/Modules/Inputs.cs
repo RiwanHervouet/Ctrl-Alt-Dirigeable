@@ -7,7 +7,6 @@ using UnityEngine.UIElements;
 public class Inputs : MonoBehaviour
 {
     public enum inputs { UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT, ESCAPE, BOTTOMALTITUDE, MIDDLEALTITUDE, TOPALTITUDE, NULL };
-    public int inputsUsed;
 
     private List<inputs> validatedInput = new List<inputs>();
     private inputs movementInput;
@@ -16,14 +15,29 @@ public class Inputs : MonoBehaviour
     private float currentParallelSelectionTime = 0f;
     private Vector2 lastMovementInput = Vector2.zero;
     private bool pause = false;
-    private bool altitudeChange = false;
 
 
     void Update()
     {
         CleanValidatedInputList();
 
-        if (GameManager.Instance.canReceiveInput)
+
+        if (!GameManager.Instance.canReceiveInput)
+        {
+            if (Input.GetButton("Escape"))
+            {
+                currentParallelSelectionTime += Time.deltaTime;
+                if (currentParallelSelectionTime > GameManager.Instance.inputSelectionTime)
+                {
+                    GameTime.Instance.gameIsPaused = false;
+                }
+            }
+            else
+            {
+                currentParallelSelectionTime = 0f;
+            }
+        }
+        else
         {
             if (Input.GetButton("Up"))
             {
@@ -101,9 +115,8 @@ public class Inputs : MonoBehaviour
                     if (currentSelectionTime > currentParallelSelectionTime)
                     {
                         validatedInput.Add(movementInput);
-                        if (ValidatedInput() != lastMovementInput)
+                        if (ValidatedInput() != lastMovementInput && ValidatedInput() != Vector2.zero)
                         {
-                            Debug.Log("input changed : " + ValidatedInput());
                             GameEvents.Instance.OnPlayerDirectionChange += ValidatedInput;
                             GameEvents.Instance.MapInputCompleted();
                             lastMovementInput = ValidatedInput();
@@ -202,6 +215,9 @@ public class Inputs : MonoBehaviour
     }
     private Vector2 ValidatedInput()
     {
+        if (validatedInput.Count <= 0)
+            return Vector2.zero;
+
         switch (validatedInput[0])
         {
             case inputs.UP:
@@ -225,26 +241,27 @@ public class Inputs : MonoBehaviour
                 return Vector2.zero;
             case inputs.BOTTOMALTITUDE:
                 Debug.Log("input bottom reconnu");
-                altitudeChange = true;
                 return Vector2.zero;
             case inputs.MIDDLEALTITUDE:
                 Debug.Log("input middle reconnu");
-                altitudeChange = true;
                 return Vector2.zero;
             case inputs.TOPALTITUDE:
                 Debug.Log("input top reconnu");
-                altitudeChange = true;
                 return Vector2.zero;
             default:
                 return Vector2.zero;
         }
     }
+
     private void CleanValidatedInputList()
     {
-        for (int i = 0; i < inputsUsed; i++)
+        for (int i = 0; i < GameManager.Instance.cleanInputList; i++)
         {
-            validatedInput.RemoveAt(0);
+            if (validatedInput.Count != 0)
+            {
+                validatedInput.RemoveAt(0);
+            }
         }
-        inputsUsed = 0;
+        GameManager.Instance.cleanInputList = 0;
     }
 }
