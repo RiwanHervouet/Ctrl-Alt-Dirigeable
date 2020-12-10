@@ -81,15 +81,15 @@ public class GameTime : Singleton<GameTime>
         }
 
         //to delete
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetButtonDown("Speed Fast"))
         {
             ChangePlayerUpdateRate(playerSpeed.FAST);
         }
-        if (Input.GetKeyDown(KeyCode.M))
+        if (Input.GetButtonDown("Speed Medium"))
         {
             ChangePlayerUpdateRate(playerSpeed.MEDIUM);
         }
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetButtonDown("Speed Slow"))
         {
             ChangePlayerUpdateRate(playerSpeed.SLOW);
         }
