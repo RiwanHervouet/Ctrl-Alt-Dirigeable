@@ -9,6 +9,7 @@ public class GameManager : Singleton<GameManager>
     public Player player;
     [Range(0f, 4f)] public float inputSelectionTime = 1f;
     [HideInInspector] public bool canReceiveInput = true;
+    [HideInInspector] public int cleanInputList = 0;
 
     [Header("Player Data")]
     public int xPlayerSpawn;
