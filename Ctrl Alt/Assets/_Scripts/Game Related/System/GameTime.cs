@@ -64,6 +64,7 @@ public class GameTime : Singleton<GameTime>
 
                 if (updatesUntilPlayerUpdate <= 1)
                 {
+                    GameEvents.Instance.JustBeforeNextPlayerUpdate();
                     GameEvents.Instance.NextPlayerUpdate();
                     updatesUntilPlayerUpdate = playerUpdateRate;
                 }
