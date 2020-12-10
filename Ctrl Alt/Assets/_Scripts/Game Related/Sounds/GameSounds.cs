@@ -136,10 +136,10 @@ public class GameSounds : MonoBehaviour
 
         //Alarms
         GameEvents.Instance.OnAlarmMapEdges += PlayAlarmMapEdgesSound;
-        GameEvents.Instance.OnShipIsSecure += StopLoopingSound;
+       // GameEvents.Instance.OnShipIsSecure += StopLoopingSound;
 
         GameEvents.Instance.OnAlarmHit += PlayAlarmHitSound;
-        GameEvents.Instance.OnShipIsRepaired += StopLoopingSound;
+        //GameEvents.Instance.OnShipIsRepaired += StopLoopingSound;
 
        /* GameEvents.Instance.OnAlarmCriticalDamage += PlayAlarmCriticalDamageSound;
         GameEvents.Instance.OnShipIsOk += StopLoopingSound;
@@ -213,12 +213,12 @@ public class GameSounds : MonoBehaviour
 
             //Alarms
             GameEvents.Instance.OnAlarmMapEdges -= PlayAlarmMapEdgesSound;
-            GameEvents.Instance.OnShipIsSecure -= StopLoopingSound;
+            // GameEvents.Instance.OnShipIsSecure -= StopLoopingSound;
 
             GameEvents.Instance.OnAlarmHit -= PlayAlarmHitSound;
-            GameEvents.Instance.OnShipIsRepaired -= StopLoopingSound;
+            //GameEvents.Instance.OnShipIsRepaired -= StopLoopingSound;
 
-      
+
 
             //Clickers
             GameEvents.Instance.OnClickerNavigation -= PlayClickerNavigationSound;
@@ -412,12 +412,12 @@ public class GameSounds : MonoBehaviour
     //Alarms
     private void PlayAlarmMapEdgesSound()
     {
-        ambianceSource.clip(alarmMapEdgesClip);
+        ambianceSource.clip = alarmMapEdgesClip;
         ambianceSource.Play();
     }
     private void PlayAlarmHitSound()
     {
-        ambianceSource.clip(alarmHitClip);
+        ambianceSource.clip = alarmHitClip;
         ambianceSource.Play();
     }
     
