@@ -138,17 +138,14 @@ public class Inputs : MonoBehaviour
                         {
                             if (FirstAlternativeInput() == inputs.MIDDLEALTITUDE)
                             {
-                                Debug.Log("GameManager changé vers middle");
                                 GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.MiddleAltitude;
                             }
                             else if (FirstAlternativeInput() == inputs.TOPALTITUDE)
                             {
-                                Debug.Log("GameManager changé vers top");
                                 GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.TopAltitude;
                             }
                             else
                             {
-                                Debug.Log("GameManager changé vers bottom");
                                 GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.BottomAltitude;
                             }
                             validatedInput.Remove(FirstAlternativeInput());

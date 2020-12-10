@@ -17,6 +17,7 @@ public class Player : MapObject
         xPosition = GameManager.Instance.xPlayerSpawn;
         yPosition = GameManager.Instance.yPlayerSpawn;
         physicalType = physicalObjectType.player;
+        nextAltitudeGoal = GameManager.Instance.startAltitude;
 
         #region Intialization
         alreadyGotHit = true;
