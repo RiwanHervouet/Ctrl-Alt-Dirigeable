@@ -1,14 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-//MODULES ont les inputs et outputs alors que OutOfExperience sont le système
 
-/* 1. Représenter de n'importe quelle manière un objet sur la carte
- * 2. Représenter d'autres
- * 3. L'afficher sur la carte
- *      aka changer la couleur des LEDs 
- *      aka avoir l'ordre de priorité
-*/
 [SelectionBase]
 public class Module_Map : MonoBehaviour
 {
@@ -40,6 +33,7 @@ public class Module_Map : MonoBehaviour
 
     void Start()
     {
+        mo_Player = mo_Player ? mo_Player : GameManager.Instance.player;
         GameEvents.Instance.OnNextRefresh += UpdateMatrix;
         GameEvents.Instance.OnNextPlayerUpdate += UpdateTopLeftMatrix;
         GameEvents.Instance.OnMapInputCompletion += DrawInputCompletion;

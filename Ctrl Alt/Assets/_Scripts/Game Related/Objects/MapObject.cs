@@ -131,12 +131,20 @@ public class MapObject : MonoBehaviour
             {
                 GameEvents.Instance.OnNextEnvironmentUpdate += Wind;
             }
-
-            if (physicalType == physicalObjectType.mountain)
+            else if (physicalType == physicalObjectType.mountain)
             {
 
                 underObject = gameObject.AddComponent<MapObject>();
                 underObject.UnderObjectInit(xPosition, yPosition, immaterialObjectType.underMountain, graphicsMiddleAltitude, graphicsBottomAltitude, new Vector2[0], graphicsRangeMiddleAltitude, graphicsRangeBottomAltitude, new Vector2[0]);
+            }
+
+            if (physicalType != physicalObjectType.lightning)
+            {
+                isActive = true;
+            }
+            else
+            {
+                isActive = false;
             }
         }
         else
@@ -145,8 +153,6 @@ public class MapObject : MonoBehaviour
         }
         totalDotsDisplayed = 0;
         tempList = new List<Vector2>();
-
-        //currentAltitude = GameManager.Instance.startAltitude;
     }
     protected virtual void DisableObject() { }
 
@@ -193,30 +199,30 @@ public class MapObject : MonoBehaviour
         totalDotsDisplayed = 0;
         tempList.Clear();
 
-        if (currentAltitude != GameManager.Instance.currentAltitude || physicalType == physicalObjectType.player)
-        {
-            if (GameManager.Instance.currentAltitude == GameManager.altitudes.MiddleAltitude || (graphicsTopAltitude.Length == 0 && graphicsRangeTopAltitude.Length == 0 && graphicsBottomAltitude.Length == 0 && graphicsRangeBottomAltitude.Length == 0))
-            {
-                currentGraphicsAltitude = graphicsMiddleAltitude;
-                currentGraphicsRangeAltitude = graphicsRangeMiddleAltitude;
-                currentAltitude = GameManager.Instance.currentAltitude;
-            }
-            else if (GameManager.Instance.currentAltitude == GameManager.altitudes.BottomAltitude)
-            {
-                currentGraphicsAltitude = graphicsBottomAltitude;
-                currentGraphicsRangeAltitude = graphicsRangeBottomAltitude;
-                currentAltitude = GameManager.Instance.currentAltitude;
-            }
-            else
-            {
-                currentGraphicsAltitude = graphicsTopAltitude;
-                currentGraphicsRangeAltitude = graphicsRangeTopAltitude;
-                currentAltitude = GameManager.Instance.currentAltitude;
-            }
-        }
-
         if (isActive)
         {
+            if (currentAltitude != GameManager.Instance.currentAltitude || physicalType == physicalObjectType.player)
+            {
+                if (GameManager.Instance.currentAltitude == GameManager.altitudes.MiddleAltitude || (graphicsTopAltitude.Length == 0 && graphicsRangeTopAltitude.Length == 0 && graphicsBottomAltitude.Length == 0 && graphicsRangeBottomAltitude.Length == 0))
+                {
+                    currentGraphicsAltitude = graphicsMiddleAltitude;
+                    currentGraphicsRangeAltitude = graphicsRangeMiddleAltitude;
+                    currentAltitude = GameManager.Instance.currentAltitude;
+                }
+                else if (GameManager.Instance.currentAltitude == GameManager.altitudes.BottomAltitude)
+                {
+                    currentGraphicsAltitude = graphicsBottomAltitude;
+                    currentGraphicsRangeAltitude = graphicsRangeBottomAltitude;
+                    currentAltitude = GameManager.Instance.currentAltitude;
+                }
+                else
+                {
+                    currentGraphicsAltitude = graphicsTopAltitude;
+                    currentGraphicsRangeAltitude = graphicsRangeTopAltitude;
+                    currentAltitude = GameManager.Instance.currentAltitude;
+                }
+            }
+
             for (int i = 0; i < currentGraphicsAltitude.Length; i++)
             {
                 if (CoordinateIsWithinTheMap(xPosition + (int)currentGraphicsAltitude[i].x, yPosition + (int)currentGraphicsAltitude[i].y))
