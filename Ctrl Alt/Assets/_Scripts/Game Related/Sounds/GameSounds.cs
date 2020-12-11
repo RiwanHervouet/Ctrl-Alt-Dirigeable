@@ -23,8 +23,8 @@ public class GameSounds : MonoBehaviour
     public AudioClip navigationClip;
     public AudioClip repairClip;
 
-    //Second
-    //Second Intro
+    [Header("Second")]
+    [Header("Second Intro")]
     public AudioClip secondWelcomeClip;
     public AudioClip secondAltitudeClip;
     public AudioClip secondNavigationClip;
@@ -33,43 +33,43 @@ public class GameSounds : MonoBehaviour
     public AudioClip secondFuelClip;
     public AudioClip secondGoalClip;
     public AudioClip secondConclusionClip;
-    //Second Weather
+    [Header("Second Weather")]
     public AudioClip secondHeavyRainClip;
     public AudioClip secondMountainStraightAheadClip;
     public AudioClip secondLightningRiskClip;
-    //Second Hits
+    [Header("Second Hits")]
     public AudioClip secondElectricalShortCircuitClip;
     public AudioClip secondMountainHitClip;
     public AudioClip secondLightningHitClip;
     public AudioClip secondGameOverClip;
-    //Second Others
+    [Header("Second Others")]
     public AudioClip secondApproachMapEdgesClip;
     public AudioClip secondMapEdgesCrossedClip;
     public AudioClip secondLowFuelClip;
     public AudioClip secondOverheatingRiskClip;
     public AudioClip secondOverheatingClip;
-    //Second Reminds
+    [Header("Second Reminds")]
     public AudioClip secondChangeDirectionClip;
     public AudioClip secondVaryAltitudeClip;
     public AudioClip secondAccelerateClip;
     public AudioClip secondRemindRepairClip;
     public AudioClip secondRemindOverheatingClip;
     public AudioClip secondRemindGoalClip;
-    //Second Congratulations
+    [Header("Second Congratulations")]
     public AudioClip secondCongratRepairClip;
     public AudioClip secondCongratPowerResetClip;
     public AudioClip secondCongratDangerAvoidClip;
     public AudioClip secondCongratSpeedClip;
     public AudioClip secondCongratGoalAchievedClip;
 
-    //Alarms
+    [Header("Alarms")]
     public AudioClip alarmMapEdgesClip;
     public AudioClip shipIsSecure;
     public AudioClip alarmHitClip;
     public AudioClip shipIsRepaired;
 
 
-    //Clickers
+    [Header("Alarms")]
     public AudioClip clickerNavigationClip;
     public AudioClip clickerRepairClip;
     public AudioClip clickerAltitudeClip;
