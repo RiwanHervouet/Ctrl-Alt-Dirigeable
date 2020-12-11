@@ -15,6 +15,7 @@ public class MapObject : MonoBehaviour
     public physicalObjectType physicalType = physicalObjectType.NULL;
     public immaterialObjectType immaterialType = immaterialObjectType.NULL;
     [Range(0, 5)] public int additionalAlphaIndex = 0;
+    [HideInInspector] public bool isActive = true;
 
     public Vector2[] graphicsMiddleAltitude;
     [Tooltip("Draw Squares between top left xy point and bottom right xy point")]
@@ -214,59 +215,62 @@ public class MapObject : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < currentGraphicsAltitude.Length; i++)
+        if (isActive)
         {
-            if (CoordinateIsWithinTheMap(xPosition + (int)currentGraphicsAltitude[i].x, yPosition + (int)currentGraphicsAltitude[i].y))
+            for (int i = 0; i < currentGraphicsAltitude.Length; i++)
             {
-                if (physicalType != physicalObjectType.NULL)
+                if (CoordinateIsWithinTheMap(xPosition + (int)currentGraphicsAltitude[i].x, yPosition + (int)currentGraphicsAltitude[i].y))
                 {
-                    GameManager.Instance.mapScript.fullMap[xPosition + (int)currentGraphicsAltitude[i].x, yPosition + (int)currentGraphicsAltitude[i].y].physicalObjectOnMe.Add(physicalType);
-                    totalDotsDisplayed++;
-                    tempList.Add(new Vector2(xPosition + (int)currentGraphicsAltitude[i].x, yPosition + (int)currentGraphicsAltitude[i].y));
-                }
-                if (immaterialType != immaterialObjectType.NULL)
-                {
-                    GameManager.Instance.mapScript.fullMap[xPosition + (int)currentGraphicsAltitude[i].x, yPosition + (int)currentGraphicsAltitude[i].y].immaterialObjectOnMe.Add(immaterialType);
-                    totalDotsDisplayed++;
-                    tempList.Add(new Vector2(xPosition + (int)currentGraphicsAltitude[i].x, yPosition + (int)currentGraphicsAltitude[i].y));
-                }
-            }
-            else
-            {
-                if (physicalType == physicalObjectType.player)
-                {
-                    GameEvents.Instance.PlayerIsHit(new List<physicalObjectType> { physicalObjectType.NULL });
-                }
-            }
-        }
-        for (int k = 0; k < currentGraphicsRangeAltitude.Length * 0.5f; k++)
-        {
-            for (int j = 0; j < currentGraphicsRangeAltitude[k * 2 + 1].y - currentGraphicsRangeAltitude[k * 2].y; j++)
-            {
-                for (int i = 0; i < currentGraphicsRangeAltitude[k * 2 + 1].x - currentGraphicsRangeAltitude[k * 2].x; i++)
-                {
-                    if (CoordinateIsWithinTheMap(xPosition + (int)currentGraphicsRangeAltitude[k * 2].x + i, yPosition + (int)currentGraphicsRangeAltitude[k * 2].y + j))
+                    if (physicalType != physicalObjectType.NULL)
                     {
-                        if (physicalType != physicalObjectType.NULL)
-                        {
-                            if (GameManager.Instance.mapScript.fullMap[xPosition + (int)currentGraphicsRangeAltitude[k * 2].x + i, yPosition + (int)currentGraphicsRangeAltitude[k * 2].y + j].physicalObjectOnMe.Contains(physicalType) == false)
-                            {
-                                GameManager.Instance.mapScript.fullMap[xPosition + (int)currentGraphicsRangeAltitude[k * 2].x + i, yPosition + (int)currentGraphicsRangeAltitude[k * 2].y + j].physicalObjectOnMe.Add(physicalType);
-                                totalDotsDisplayed++;
-                                tempList.Add(new Vector2(xPosition + (int)currentGraphicsRangeAltitude[k * 2].x + i, yPosition + (int)currentGraphicsRangeAltitude[k * 2].y + j));
-                            }
-                        }
-                        if (immaterialType != immaterialObjectType.NULL)
-                        {
-                            if (GameManager.Instance.mapScript.fullMap[xPosition + (int)currentGraphicsRangeAltitude[k * 2].x + i, yPosition + (int)currentGraphicsRangeAltitude[k * 2].y + j].immaterialObjectOnMe.Contains(immaterialType) == false)
-                            {
-                                GameManager.Instance.mapScript.fullMap[xPosition + (int)currentGraphicsRangeAltitude[k * 2].x + i, yPosition + (int)currentGraphicsRangeAltitude[k * 2].y + j].immaterialObjectOnMe.Add(immaterialType);
-                                totalDotsDisplayed++;
-                                tempList.Add(new Vector2(xPosition + (int)currentGraphicsRangeAltitude[k * 2].x + i, yPosition + (int)currentGraphicsRangeAltitude[k * 2].y + j));
-                            }
-                        }
+                        GameManager.Instance.mapScript.fullMap[xPosition + (int)currentGraphicsAltitude[i].x, yPosition + (int)currentGraphicsAltitude[i].y].physicalObjectOnMe.Add(physicalType);
+                        totalDotsDisplayed++;
+                        tempList.Add(new Vector2(xPosition + (int)currentGraphicsAltitude[i].x, yPosition + (int)currentGraphicsAltitude[i].y));
                     }
+                    if (immaterialType != immaterialObjectType.NULL)
+                    {
+                        GameManager.Instance.mapScript.fullMap[xPosition + (int)currentGraphicsAltitude[i].x, yPosition + (int)currentGraphicsAltitude[i].y].immaterialObjectOnMe.Add(immaterialType);
+                        totalDotsDisplayed++;
+                        tempList.Add(new Vector2(xPosition + (int)currentGraphicsAltitude[i].x, yPosition + (int)currentGraphicsAltitude[i].y));
+                    }
+                }
+                else
+                {
+                    if (physicalType == physicalObjectType.player)
+                    {
+                        GameEvents.Instance.PlayerIsHit(new List<physicalObjectType> { physicalObjectType.NULL });
+                    }
+                }
+            }
+            for (int k = 0; k < currentGraphicsRangeAltitude.Length * 0.5f; k++)
+            {
+                for (int j = 0; j < currentGraphicsRangeAltitude[k * 2 + 1].y - currentGraphicsRangeAltitude[k * 2].y; j++)
+                {
+                    for (int i = 0; i < currentGraphicsRangeAltitude[k * 2 + 1].x - currentGraphicsRangeAltitude[k * 2].x; i++)
+                    {
+                        if (CoordinateIsWithinTheMap(xPosition + (int)currentGraphicsRangeAltitude[k * 2].x + i, yPosition + (int)currentGraphicsRangeAltitude[k * 2].y + j))
+                        {
+                            if (physicalType != physicalObjectType.NULL)
+                            {
+                                if (GameManager.Instance.mapScript.fullMap[xPosition + (int)currentGraphicsRangeAltitude[k * 2].x + i, yPosition + (int)currentGraphicsRangeAltitude[k * 2].y + j].physicalObjectOnMe.Contains(physicalType) == false)
+                                {
+                                    GameManager.Instance.mapScript.fullMap[xPosition + (int)currentGraphicsRangeAltitude[k * 2].x + i, yPosition + (int)currentGraphicsRangeAltitude[k * 2].y + j].physicalObjectOnMe.Add(physicalType);
+                                    totalDotsDisplayed++;
+                                    tempList.Add(new Vector2(xPosition + (int)currentGraphicsRangeAltitude[k * 2].x + i, yPosition + (int)currentGraphicsRangeAltitude[k * 2].y + j));
+                                }
+                            }
+                            if (immaterialType != immaterialObjectType.NULL)
+                            {
+                                if (GameManager.Instance.mapScript.fullMap[xPosition + (int)currentGraphicsRangeAltitude[k * 2].x + i, yPosition + (int)currentGraphicsRangeAltitude[k * 2].y + j].immaterialObjectOnMe.Contains(immaterialType) == false)
+                                {
+                                    GameManager.Instance.mapScript.fullMap[xPosition + (int)currentGraphicsRangeAltitude[k * 2].x + i, yPosition + (int)currentGraphicsRangeAltitude[k * 2].y + j].immaterialObjectOnMe.Add(immaterialType);
+                                    totalDotsDisplayed++;
+                                    tempList.Add(new Vector2(xPosition + (int)currentGraphicsRangeAltitude[k * 2].x + i, yPosition + (int)currentGraphicsRangeAltitude[k * 2].y + j));
+                                }
+                            }
+                        }
 
+                    }
                 }
             }
         }
@@ -303,6 +307,11 @@ public class MapObject : MonoBehaviour
         }
     }
     #endregion
+
+    void ActivateLightning() /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    {
+
+    }
 
     void Wind()
     {

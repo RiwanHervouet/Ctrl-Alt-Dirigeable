@@ -51,6 +51,8 @@ public class GameEvents : Singleton<GameEvents>
     public event Action<List<physicalObjectType>> OnPlayerGettingHit;
     public event Action OnShipRepaired;
     public event Action<Inputs.inputs, bool> OnCtrlAltInputSent;
+    public event Action<bool> OnSouffleurInhaled;
+    public event Action<bool> OnSouffleurExhaled;
     #endregion
 
     #region Methods related to events
@@ -88,6 +90,18 @@ public class GameEvents : Singleton<GameEvents>
     {
         if (OnCtrlAltInputSent != null)
             OnCtrlAltInputSent(inputSent, didISendIt);
+    }
+
+    public void SouffleurInhaled(bool isInhaled)
+    {
+        if (OnSouffleurInhaled != null)
+            OnSouffleurInhaled(isInhaled);
+    }
+
+    public void SouffleurExhaled(bool isExhaled)
+    {
+        if (OnSouffleurExhaled != null)
+            OnSouffleurExhaled(isExhaled);
     }
     #endregion
     #endregion
