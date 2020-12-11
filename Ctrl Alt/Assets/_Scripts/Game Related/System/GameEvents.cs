@@ -50,6 +50,7 @@ public class GameEvents : Singleton<GameEvents>
     public event Func<Vector2> OnPlayerDirectionChange;
     public event Action<List<physicalObjectType>> OnPlayerGettingHit;
     public event Action OnShipRepaired;
+    public event Action<Inputs.inputs, bool> OnCtrlAltInputSent;
     #endregion
 
     #region Methods related to events
@@ -81,6 +82,12 @@ public class GameEvents : Singleton<GameEvents>
     public void RepairShip() //not called yet
     {
         OnShipRepaired?.Invoke();
+    }
+
+    public void CtrlAltInputSent(Inputs.inputs inputSent, bool didISendIt)
+    {
+        if (OnCtrlAltInputSent != null)
+            OnCtrlAltInputSent(inputSent, didISendIt);
     }
     #endregion
     #endregion

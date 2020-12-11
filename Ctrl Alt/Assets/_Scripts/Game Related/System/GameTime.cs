@@ -80,22 +80,38 @@ public class GameTime : Singleton<GameTime>
 
             GameEvents.Instance.OutOfTimeUpdate();
         }
-
-        //to delete
-        if (Input.GetButtonDown("Speed Fast"))
-        {
-            ChangePlayerUpdateRate(playerSpeed.FAST);
-        }
-        if (Input.GetButtonDown("Speed Medium"))
-        {
-            ChangePlayerUpdateRate(playerSpeed.MEDIUM);
-        }
-        if (Input.GetButtonDown("Speed Slow"))
-        {
-            ChangePlayerUpdateRate(playerSpeed.SLOW);
-        }
     }
 
+
+    public void ChangePlayerSpeed(Inputs.inputs goFEST)
+    {
+        switch (goFEST)
+        {
+            case Inputs.inputs.SPEED_SLOWER:
+                if (playerUpdateRate == 4)
+                {
+                    ChangePlayerUpdateRate(playerSpeed.SLOW);
+                }
+                else if (playerUpdateRate == 8)
+                {
+                    ChangePlayerUpdateRate(playerSpeed.MEDIUM);
+                }
+                break;
+            case Inputs.inputs.SPEED_FASTER:
+                if (playerUpdateRate == 4)
+                {
+                    ChangePlayerUpdateRate(playerSpeed.FAST);
+                }
+                else if (playerUpdateRate == 2)
+                {
+                    ChangePlayerUpdateRate(playerSpeed.MEDIUM);
+                }
+                break;
+            default:
+                Debug.LogWarning("Il faut rentrer une vitesse dans ce switch");
+                break;
+        }
+    }
     public enum playerSpeed { FAST, MEDIUM, SLOW }
     public void ChangePlayerUpdateRate(playerSpeed playerSpeed)
     {

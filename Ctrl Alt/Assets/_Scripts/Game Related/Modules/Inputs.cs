@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Inputs : MonoBehaviour
 {
-    public enum inputs { UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT, ESCAPE, BOTTOMALTITUDE, MIDDLEALTITUDE, TOPALTITUDE, NULL };
+    public enum inputs { UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT, ESCAPE, ALTITUDE_LOWER, ALTITUDE_HIGHER, SPEED_SLOWER, SPEED_FASTER, NULL };
 
+    [HideInInspector] public List<inputs> ctrlAltInput = new List<inputs>();
+    private bool gazeMovementInput = false;
+    private bool gazeAlternativeInput = false;
     private List<inputs> validatedInput = new List<inputs>();
     private inputs movementInput;
     private float currentSelectionTime = 0f;
@@ -17,6 +17,17 @@ public class Inputs : MonoBehaviour
     private bool pause = false;
 
 
+    void OnEnable()
+    {
+        GameEvents.Instance.OnCtrlAltInputSent += UpdateInputList;
+    }
+    private void OnDisable()
+    {
+        if (GameEvents.Instance != null)
+        {
+            GameEvents.Instance.OnCtrlAltInputSent -= UpdateInputList;
+        }
+    }
     void Update()
     {
         CleanValidatedInputList();
@@ -39,6 +50,8 @@ public class Inputs : MonoBehaviour
         }
         else
         {
+            CtrlAltInputRegistration();
+
             if (Input.GetButton("Up"))
             {
                 if (Input.GetButton("Left"))
@@ -79,30 +92,40 @@ public class Inputs : MonoBehaviour
             }
             else
             {
-                movementInput = inputs.NULL;
-                currentSelectionTime = 0f;
+                if (!gazeMovementInput)
+                {
+                    movementInput = inputs.NULL;
+                    currentSelectionTime = 0f;
+                }
             }
 
             if (Input.GetButton("Escape"))
             {
                 TestIfStillSameInput(inputs.ESCAPE, false);
             }
-            else if (Input.GetButton("Altitude Bottom"))
+            else if (Input.GetButton("Altitude Lower"))
             {
-                TestIfStillSameInput(inputs.BOTTOMALTITUDE, false);
+                TestIfStillSameInput(inputs.ALTITUDE_LOWER, false);
             }
-            else if (Input.GetButton("Altitude Middle"))
+            else if (Input.GetButton("Altitude Higher"))
             {
-                TestIfStillSameInput(inputs.MIDDLEALTITUDE, false);
+                TestIfStillSameInput(inputs.ALTITUDE_HIGHER, false);
             }
-            else if (Input.GetButton("Altitude Top"))
+            else if (Input.GetButton("Speed Slower"))
             {
-                TestIfStillSameInput(inputs.TOPALTITUDE, false);
+                TestIfStillSameInput(inputs.SPEED_SLOWER, false);
+            }
+            else if (Input.GetButton("Speed Faster"))
+            {
+                TestIfStillSameInput(inputs.SPEED_FASTER, false);
             }
             else
             {
-                alternativeInput = inputs.NULL;
-                currentParallelSelectionTime = 0f;
+                if (!gazeAlternativeInput)
+                {
+                    alternativeInput = inputs.NULL;
+                    currentParallelSelectionTime = 0f;
+                }
             }
 
 
@@ -136,17 +159,35 @@ public class Inputs : MonoBehaviour
                         }
                         else
                         {
-                            if (FirstAlternativeInput() == inputs.MIDDLEALTITUDE)
+                            if (FirstAlternativeInput() == inputs.ALTITUDE_LOWER)
                             {
-                                GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.MiddleAltitude;
+                                if (GameManager.Instance.player.nextAltitudeGoal == GameManager.altitudes.MiddleAltitude)
+                                {
+                                    GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.BottomAltitude;
+                                }
+                                if (GameManager.Instance.player.nextAltitudeGoal == GameManager.altitudes.TopAltitude)
+                                {
+                                    GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.MiddleAltitude;
+                                }
                             }
-                            else if (FirstAlternativeInput() == inputs.TOPALTITUDE)
+                            else if (FirstAlternativeInput() == inputs.ALTITUDE_HIGHER)
                             {
-                                GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.TopAltitude;
+                                if (GameManager.Instance.player.nextAltitudeGoal == GameManager.altitudes.MiddleAltitude)
+                                {
+                                    GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.TopAltitude;
+                                }
+                                if (GameManager.Instance.player.nextAltitudeGoal == GameManager.altitudes.BottomAltitude)
+                                {
+                                    GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.MiddleAltitude;
+                                }
                             }
-                            else
+                            else if (FirstAlternativeInput() == inputs.SPEED_SLOWER)
                             {
-                                GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.BottomAltitude;
+                                GameTime.Instance.ChangePlayerSpeed(inputs.SPEED_SLOWER);
+                            }
+                            else if (FirstAlternativeInput() == inputs.SPEED_FASTER)
+                            {
+                                GameTime.Instance.ChangePlayerSpeed(inputs.SPEED_FASTER);
                             }
                             validatedInput.Remove(FirstAlternativeInput());
                         }
@@ -236,14 +277,9 @@ public class Inputs : MonoBehaviour
             case inputs.ESCAPE:
                 pause = true;
                 return Vector2.zero;
-            case inputs.BOTTOMALTITUDE:
-                Debug.Log("input bottom reconnu");
+            case inputs.ALTITUDE_LOWER:
                 return Vector2.zero;
-            case inputs.MIDDLEALTITUDE:
-                Debug.Log("input middle reconnu");
-                return Vector2.zero;
-            case inputs.TOPALTITUDE:
-                Debug.Log("input top reconnu");
+            case inputs.ALTITUDE_HIGHER:
                 return Vector2.zero;
             default:
                 return Vector2.zero;
@@ -260,5 +296,32 @@ public class Inputs : MonoBehaviour
             }
         }
         GameManager.Instance.cleanInputList = 0;
+    }
+
+    private void CtrlAltInputRegistration()
+    {
+        gazeMovementInput = false;
+        gazeAlternativeInput = false;
+        for (int i = 0; i < ctrlAltInput.Count; i++)
+        {
+            TestIfStillSameInput(ctrlAltInput[i], (int)ctrlAltInput[i] <= 7 ? true : false);
+            if ((int)ctrlAltInput[i] <= 7)
+            {
+                gazeMovementInput = true;
+            }
+            else
+            {
+                if (ctrlAltInput[i] != inputs.NULL)
+                    gazeAlternativeInput = true;
+            }
+        }
+
+        ctrlAltInput.Clear();
+    }
+
+    private void UpdateInputList(inputs inputReceived, bool isActive)
+    {
+        if (isActive)
+            ctrlAltInput.Add(inputReceived);
     }
 }
