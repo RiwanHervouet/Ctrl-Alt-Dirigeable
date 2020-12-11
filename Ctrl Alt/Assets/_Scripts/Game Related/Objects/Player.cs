@@ -191,7 +191,7 @@ public class Player : MapObject
 
     Vector2 ShipTurning(Vector2 _nextRelativePositionGoal)
     {
-        if(nextRelativePosition != _nextRelativePositionGoal) // si j'ai une nouvelle direction donnée
+        if(nextRelativePositionGoal != _nextRelativePositionGoal) // si j'ai une nouvelle direction donnée
         {
             GameEvents.Instance.ClickerNavigation();
             GameManager.Instance.cleanInputList++;

@@ -9,7 +9,8 @@ public class LightningManager : MonoBehaviour
     [SerializeField] [Range(0, 15)] private int simultaneousLightning = 4;
     [SerializeField] private bool lightningNeighborsPossible = true;
     private MapObject[] allLightningObjects;
-    private MapObject[] allLightningAnnonceObjects;
+    private MapObject[] allLightningPrepObjects;
+    private LightningPrep[] allLightningPrepScripts;
     private int lightningsActivatedCount;
     private bool[] lightningActivated;
     private bool[] lightningObjectActivated;
@@ -23,7 +24,8 @@ public class LightningManager : MonoBehaviour
         for (int i = 0; i < totalLightningCount; i++)
         {
             allLightningObjects[i] = transform.GetChild(i).GetComponent<MapObject>();
-            allLightningAnnonceObjects[i] = allLightningObjects[i].transform.GetChild(0).GetComponent<MapObject>();
+            allLightningPrepObjects[i] = allLightningObjects[i].transform.GetChild(0).GetComponent<MapObject>();
+            allLightningPrepScripts[i] = allLightningPrepObjects[i].transform.GetComponent<LightningPrep>();
         }
 
         lightningObjectActivated = new bool[totalLightningCount];
@@ -34,7 +36,7 @@ public class LightningManager : MonoBehaviour
         for (int i = 0; i < allLightningObjects.Length; i++)
         {
             allLightningObjects[i].isActive = false;
-            allLightningAnnonceObjects[i].isActive = false;
+            allLightningPrepObjects[i].isActive = false;
         }
     }
 
@@ -59,7 +61,7 @@ public class LightningManager : MonoBehaviour
     private void ActivateLightning()
     {
         bool activatedNewLightning = false;
-        int lightningIndex;
+        int lightningIndex = 1000;
         int loopNumber = 0;
 
         while (!activatedNewLightning && loopNumber < 10)
@@ -87,8 +89,15 @@ public class LightningManager : MonoBehaviour
                 }
             }
         }
+        CreateNewLightning(lightningIndex);
+    }
 
-        /////////////////////////////////////////////////////////////////////////////////////////// Fonction d'activation de l'éclair d'index ici
+    private void CreateNewLightning(int index)
+    {
+        if (index < allLightningPrepScripts.Length)
+        {
+            allLightningPrepScripts[index].StartAnimation(4);
+        }
     }
 
     void UpdateLightningObjectsData()
@@ -97,7 +106,7 @@ public class LightningManager : MonoBehaviour
         for (int i = 0; i < totalLightningCount; i++)
         {
             lightningObjectActivated[i] = allLightningObjects[i].isActive;
-            lightningAnnonceActivated[i] = allLightningAnnonceObjects[i].isActive;
+            lightningAnnonceActivated[i] = allLightningPrepObjects[i].isActive;
 
 
             if (lightningObjectActivated[i] || lightningAnnonceActivated[i])
@@ -118,7 +127,7 @@ public class LightningManager : MonoBehaviour
                 lightningsActivatedCount--;
             }
         }
-        if (Random.Range(0, lightningsActivatedCount) < simultaneousLightning) 
+        if (Random.Range(0, lightningsActivatedCount) < simultaneousLightning)
         {
 
         }

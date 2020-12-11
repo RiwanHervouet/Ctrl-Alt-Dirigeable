@@ -54,6 +54,7 @@ public class GameTime : Singleton<GameTime>
             {
                 if (updatesUntilEnvironmentUpdate <= 1)
                 {
+                    GameEvents.Instance.JustBeforeNextEnvironmentUpdate();
                     GameEvents.Instance.NextEnvironmentUpdate();
                     updatesUntilEnvironmentUpdate = environmentUpdateRate;
                 }

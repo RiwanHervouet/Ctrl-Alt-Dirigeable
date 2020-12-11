@@ -10,10 +10,10 @@ public class GameEvents : Singleton<GameEvents>
     public event Action OnJustBeforeNextPlayerUpdate;
     public event Action OnNextPlayerUpdate;
 
+    public event Action OnJustBeforeNextEnvironmentUpdate;
     public event Action OnNextEnvironmentUpdate;
-    //public event Action onNextEnvironmentUpdateStart;
-    //public event Action onNextEnvironmentUpdateData;
 
+    public event Action OnJustBeforeNextRefresh;
     public event Action OnNextRefresh;
 
     public event Action OutOfTimeEvents;
@@ -24,9 +24,17 @@ public class GameEvents : Singleton<GameEvents>
     {
         OnNextRefresh?.Invoke();
     }
+    public void JustBeforeNextRefresh()
+    {
+        OnJustBeforeNextRefresh?.Invoke();
+    }
     public void NextEnvironmentUpdate()
     {
         OnNextEnvironmentUpdate?.Invoke();
+    }
+    public void JustBeforeNextEnvironmentUpdate()
+    {
+        OnJustBeforeNextEnvironmentUpdate?.Invoke();
     }
     public void NextPlayerUpdate()
     {
