@@ -7,6 +7,7 @@ public class GameSounds : MonoBehaviour
     #region Initialization
     public AudioSource fxSource; // joue un son UNE FOIS
     public AudioSource secondSource; // joue un son UNE FOIS
+    public AudioSource stormSource; 
     public AudioSource ambianceSource; // loop le seul son dedans
 
     [Header("Hits")]
@@ -36,7 +37,7 @@ public class GameSounds : MonoBehaviour
     [Header("Second Weather")]
     public AudioClip secondHeavyRainClip;
     public AudioClip secondMountainStraightAheadClip;
-    public AudioClip secondLightningRiskClip;
+    public AudioClip stormAmbienceClip;
     [Header("Second Hits")]
     public AudioClip secondElectricalShortCircuitClip;
     public AudioClip secondMountainHitClip;
@@ -76,10 +77,13 @@ public class GameSounds : MonoBehaviour
     public AudioClip clickerAccelerationClip;
     public AudioClip clickerDeccelerationClip;
 
+    public static bool inAStormPlaying = false;
     #endregion
 
     void Start()
     {
+        inAStormPlaying = false;
+        inAStormPlaying = false;
         //Hits
         GameEvents.Instance.OnMountainHit += PlayMountainHitSound;
         GameEvents.Instance.OnLightningHit += PlayLightningHitSound;
@@ -108,7 +112,8 @@ public class GameSounds : MonoBehaviour
         //Second Weather
         GameEvents.Instance.OnSecondHeavyRain += PlaySecondHeavyRainSound;
         GameEvents.Instance.OnSecondMountainStraightAhead += PlaySecondMountainStraightAheadSound;
-        GameEvents.Instance.OnSecondLightningRisk += PlaySecondLightningRiskSound;
+        GameEvents.Instance.OnWithinAStorm += PlayWithinAStorm;
+        GameEvents.Instance.OnExitStorm += StopWithinAStorm;
         //Second Hits
         GameEvents.Instance.OnSecondElectricalShortCircuit += PlaySecondElectricalShortCircuitSound;
         GameEvents.Instance.OnSecondMountainHit += PlaySecondMountainHitSound;
@@ -159,7 +164,7 @@ public class GameSounds : MonoBehaviour
         {
             //Hits
             GameEvents.Instance.OnMountainHit -= PlayMountainHitSound;
-            GameEvents.Instance.OnLightningHit -= PlayMountainHitSound;
+            GameEvents.Instance.OnLightningHit -= PlayLightningHitSound;
             GameEvents.Instance.OnElectricalShortCircuit -= PlayElectricalShortCircuitSound;
             GameEvents.Instance.OnGameOver -= PlayGameOverSound;
             //GameEvents.Instance.OnShipHit1 -= PlayShipHit1Sound;
@@ -185,7 +190,8 @@ public class GameSounds : MonoBehaviour
             //Second Weather
             GameEvents.Instance.OnSecondHeavyRain -= PlaySecondHeavyRainSound;
             GameEvents.Instance.OnSecondMountainStraightAhead -= PlaySecondMountainStraightAheadSound;
-            GameEvents.Instance.OnSecondLightningRisk -= PlaySecondLightningRiskSound;
+            GameEvents.Instance.OnWithinAStorm -= PlayWithinAStorm;
+            GameEvents.Instance.OnExitStorm -= StopWithinAStorm;
             //Second Hits
             GameEvents.Instance.OnSecondElectricalShortCircuit -= PlaySecondElectricalShortCircuitSound;
             GameEvents.Instance.OnSecondMountainHit -= PlaySecondMountainHitSound;
@@ -320,9 +326,14 @@ public class GameSounds : MonoBehaviour
     {
         secondSource.PlayOneShot(secondMountainStraightAheadClip);
     }
-    private void PlaySecondLightningRiskSound()
+    private void PlayWithinAStorm()
     {
-        secondSource.PlayOneShot(secondLightningRiskClip);
+        stormSource.clip = stormAmbienceClip;
+        stormSource.Play();
+    }
+    private void StopWithinAStorm()
+    {
+        stormSource.Stop();
     }
     //Second Hits
     private void PlaySecondElectricalShortCircuitSound()
@@ -331,11 +342,11 @@ public class GameSounds : MonoBehaviour
     }
     private void PlaySecondMountainHitSound()
     {
-        secondSource.PlayOneShot(secondMountainHitClip);
+        StartCoroutine(PlayOneShotDelayed(secondSource, secondMountainHitClip, 1.5f));
     }
     private void PlaySecondLightningHitSound()
     {
-        secondSource.PlayOneShot(secondLightningHitClip);
+        StartCoroutine(PlayOneShotDelayed(secondSource, secondLightningHitClip, 4f));
     }
     private void PlaySecondGameOverSound()
     {
@@ -449,4 +460,9 @@ public class GameSounds : MonoBehaviour
         fxSource.PlayOneShot(clickerDeccelerationClip);
     }
 
+    IEnumerator PlayOneShotDelayed(AudioSource source, AudioClip clip,float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        source.PlayOneShot(clip);
+    }
 }

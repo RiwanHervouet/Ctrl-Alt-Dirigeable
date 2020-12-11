@@ -160,7 +160,8 @@ public class GameEvents : Singleton<GameEvents>
     //Second Weather
     public event Action OnSecondHeavyRain;
     public event Action OnSecondMountainStraightAhead;
-    public event Action OnSecondLightningRisk;
+    public event Action OnWithinAStorm;
+    public event Action OnExitStorm;
     //Second Hits
     public event Action OnSecondElectricalShortCircuit;
     public event Action OnSecondMountainHit;
@@ -286,9 +287,13 @@ public class GameEvents : Singleton<GameEvents>
     {
         OnSecondMountainStraightAhead?.Invoke();
     }
-    public void SecondLightningRisk()
+    public void EnteringAStorm()
     {
-        OnSecondLightningRisk?.Invoke();
+        OnWithinAStorm?.Invoke();
+    }
+    public void ExitingAStorm()
+    {
+        OnExitStorm?.Invoke();
     }
     //Second Hits
     public void SecondElectricalShortCircuit()

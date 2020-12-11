@@ -88,6 +88,7 @@ public class GameTime : Singleton<GameTime>
         switch (goFEST)
         {
             case Inputs.inputs.SPEED_SLOWER:
+                GameEvents.Instance.Decceleration();
                 if (playerUpdateRate == 4)
                 {
                     ChangePlayerUpdateRate(playerSpeed.SLOW);
@@ -98,6 +99,7 @@ public class GameTime : Singleton<GameTime>
                 }
                 break;
             case Inputs.inputs.SPEED_FASTER:
+                GameEvents.Instance.Acceleration();
                 if (playerUpdateRate == 4)
                 {
                     ChangePlayerUpdateRate(playerSpeed.FAST);

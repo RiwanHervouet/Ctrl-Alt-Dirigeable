@@ -163,10 +163,14 @@ public class Inputs : MonoBehaviour
                             {
                                 if (GameManager.Instance.player.nextAltitudeGoal == GameManager.altitudes.MiddleAltitude)
                                 {
+                                    GameEvents.Instance.AltitudeDeclining();
+                                    GameEvents.Instance.ClickerAltitude();
                                     GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.BottomAltitude;
                                 }
                                 if (GameManager.Instance.player.nextAltitudeGoal == GameManager.altitudes.TopAltitude)
                                 {
+                                    GameEvents.Instance.AltitudeDeclining();
+                                    GameEvents.Instance.ClickerAltitude();
                                     GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.MiddleAltitude;
                                 }
                             }
@@ -174,10 +178,14 @@ public class Inputs : MonoBehaviour
                             {
                                 if (GameManager.Instance.player.nextAltitudeGoal == GameManager.altitudes.MiddleAltitude)
                                 {
+                                    GameEvents.Instance.AltitudeIncreasing();
+                                    GameEvents.Instance.ClickerAltitude();
                                     GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.TopAltitude;
                                 }
                                 if (GameManager.Instance.player.nextAltitudeGoal == GameManager.altitudes.BottomAltitude)
                                 {
+                                    GameEvents.Instance.AltitudeIncreasing();
+                                    GameEvents.Instance.ClickerAltitude();
                                     GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.MiddleAltitude;
                                 }
                             }

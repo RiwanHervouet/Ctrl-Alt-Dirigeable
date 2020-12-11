@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 [SelectionBase]
@@ -72,10 +73,38 @@ public class OOE_Map : MonoBehaviour
             for (currentHorizontalIndex = 0; currentHorizontalIndex < fullMap.GetLength(0); currentHorizontalIndex++)
             {
                 fullMap[currentHorizontalIndex, currentVerticalIndex].myColor = DisplayRightColor(fullMap[currentHorizontalIndex, currentVerticalIndex]);
+                Feedback(fullMap[currentHorizontalIndex, currentVerticalIndex]);
             }
         }
     }
 
+    private void Feedback(MapEntity mapPoint)
+    {
+        if (mapPoint.physicalObjectOnMe.Contains(physicalObjectType.player))
+        {
+            if (mapPoint.immaterialObjectOnMe.Contains(immaterialObjectType.storm))
+            {
+                if (!GameManager.Instance.player.alreadyMetAStorm)
+                {
+                    GameManager.Instance.player.alreadyMetAStorm = true;
+                    GameEvents.Instance.SecondHeavyRain();
+                }
+                if (!GameSounds.inAStormPlaying)
+                {
+                    GameEvents.Instance.EnteringAStorm();
+                    GameSounds.inAStormPlaying = true;
+                }
+            }
+            else
+            {
+                if (GameSounds.inAStormPlaying)
+                {
+                    GameEvents.Instance.ExitingAStorm();
+                    GameSounds.inAStormPlaying = false;
+                }
+            }
+        }
+    }
 
     private Color DisplayRightColor(MapEntity mapPoint)
     {
@@ -175,6 +204,12 @@ public class OOE_Map : MonoBehaviour
         if (mapPoint.edgeOfMapDistance < Colors.almostOutOfBounds.Length)
         {
             currentColor = Color.Lerp(currentColor, Colors.outOfBounds, Colors.almostOutOfBounds[mapPoint.edgeOfMapDistance]);
+
+            if (mapPoint.physicalObjectOnMe.Contains(physicalObjectType.player) && !GameManager.Instance.player.alreadyWarnedEdgeOfMap)
+            {
+                GameManager.Instance.player.alreadyWarnedEdgeOfMap = true;
+                GameEvents.Instance.SecondApproachMapEdges();
+            }
         }
 
         return currentColor;

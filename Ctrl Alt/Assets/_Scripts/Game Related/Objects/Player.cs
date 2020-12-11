@@ -6,6 +6,10 @@ public class Player : MapObject
     private bool alreadyGotHit;
     private bool randomDirection;
     private int updatesUntilICanGetHitAgain;
+    public bool alreadyMetAStorm = false;
+    public bool alreadyWarnedEdgeOfMap = false;
+    private int canBeWarnedAgain = 8;
+    private int canBeWarnedAgainCount;
 
     private Vector2 nextRelativePositionGoal;
     [HideInInspector] public GameManager.altitudes nextAltitudeGoal;
@@ -18,6 +22,8 @@ public class Player : MapObject
         yPosition = GameManager.Instance.yPlayerSpawn;
         physicalType = physicalObjectType.player;
         nextAltitudeGoal = GameManager.Instance.startAltitude;
+        alreadyMetAStorm = false;
+        alreadyWarnedEdgeOfMap = false;
 
         #region Intialization
         alreadyGotHit = true;
@@ -122,12 +128,15 @@ public class Player : MapObject
         {
             if (!alreadyGotHit)
             {
+                GameEvents.Instance.LightningHit();
+                GameEvents.Instance.SecondLightningHit();
                 randomDirection = true;
                 // animation
             }
         }
         else //bord de map hit
         {
+            GameEvents.Instance.AlarmMapEdges();
             if (yPosition < 1)
             {
                 yPosition = 5;
@@ -184,6 +193,7 @@ public class Player : MapObject
     {
         if(nextRelativePosition != _nextRelativePositionGoal) // si j'ai une nouvelle direction donnée
         {
+            GameEvents.Instance.ClickerNavigation();
             GameManager.Instance.cleanInputList++;
         }
         nextRelativePositionGoal = _nextRelativePositionGoal;
