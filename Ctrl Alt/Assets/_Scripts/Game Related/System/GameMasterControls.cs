@@ -30,5 +30,9 @@ public class GameMasterControls : MonoBehaviour
         {
             GameManager.Instance.player.nextAltitudeGoal = GameManager.altitudes.BottomAltitude;
         }
+        if (Input.GetButtonDown("MJ Kill Player"))
+        {
+            Time.timeScale = Time.timeScale == 0f ? 1f : 0f;
+        }
     }
 }

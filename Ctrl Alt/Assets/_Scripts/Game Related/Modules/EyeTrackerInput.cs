@@ -50,6 +50,7 @@ public class EyeTrackerInput : MonoBehaviour
 
     private void Update()
     {
+        //SwitchConfirmation();
         if (souffleurAffected)
         {
             if (gazeComponent.HasGazeFocus)
@@ -89,5 +90,74 @@ public class EyeTrackerInput : MonoBehaviour
     void IsSouffleurExhaled(bool souffleurState)
     {
         isExhaled = souffleurState;
+    }
+
+    void SwitchConfirmation()
+    {
+        switch (myInput)
+        {
+            case Inputs.inputs.UP:
+                break;
+            case Inputs.inputs.DOWN:
+                break;
+            case Inputs.inputs.LEFT:
+                break;
+            case Inputs.inputs.RIGHT:
+                break;
+            case Inputs.inputs.UP_RIGHT:
+                break;
+            case Inputs.inputs.UP_LEFT:
+                break;
+            case Inputs.inputs.DOWN_RIGHT:
+                break;
+            case Inputs.inputs.DOWN_LEFT:
+                break;
+            case Inputs.inputs.ESCAPE:
+                break;
+            case Inputs.inputs.ALTITUDE_LOWER:
+                if (isExhaled)
+                {
+                    GameEvents.Instance.TurnOnConfirmationAltitude();
+                }
+                else
+                {
+                    GameEvents.Instance.TurnOffConfirmationAltitude();
+                }
+                break;
+            case Inputs.inputs.ALTITUDE_HIGHER:
+                if (isExhaled)
+                {
+                    GameEvents.Instance.TurnOnConfirmationAltitude();
+                }
+                else
+                {
+                    GameEvents.Instance.TurnOffConfirmationAltitude();
+                }
+                break;
+            case Inputs.inputs.SPEED_SLOWER:
+                if (isExhaled)
+                {
+                    GameEvents.Instance.TurnOnConfirmationEssence();
+                }
+                else
+                {
+                    GameEvents.Instance.TurnOnConfirmationEssence();
+                }
+                break;
+            case Inputs.inputs.SPEED_FASTER:
+                if (isExhaled)
+                {
+                    GameEvents.Instance.TurnOnConfirmationEssence();
+                }
+                else
+                {
+                    GameEvents.Instance.TurnOnConfirmationEssence();
+                }
+                break;
+            case Inputs.inputs.NULL:
+                break;
+            default:
+                break;
+        }
     }
 }

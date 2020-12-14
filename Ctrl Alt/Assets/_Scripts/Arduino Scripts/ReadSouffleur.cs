@@ -48,6 +48,7 @@ public class ReadSouffleur : MonoBehaviour
 
         }
 
+        GameEvents.Instance.SouffleurExhaled(souffle);
     }
 
 }

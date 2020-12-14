@@ -256,6 +256,21 @@ public class Player : MapObject
                 GameManager.Instance.currentAltitude = GameManager.altitudes.MiddleAltitude;
             }
         }
+
+        if (GameManager.Instance.currentAltitude == GameManager.altitudes.MiddleAltitude)
+        {
+            GameEvents.Instance.TurnOnAltitude1();
+            GameEvents.Instance.TurnOnAltitude2();
+            GameEvents.Instance.TurnOffAltitude3();
+        }
+        else if (GameManager.Instance.currentAltitude == GameManager.altitudes.BottomAltitude)
+        {
+            GameEvents.Instance.TurnOffAltitude2();
+        }
+        else if (GameManager.Instance.currentAltitude == GameManager.altitudes.BottomAltitude)
+        {
+            GameEvents.Instance.TurnOnAltitude3();
+        }
     }
 
     private void RandomizeDirection()

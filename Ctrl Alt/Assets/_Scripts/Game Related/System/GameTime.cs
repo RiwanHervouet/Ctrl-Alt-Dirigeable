@@ -122,12 +122,17 @@ public class GameTime : Singleton<GameTime>
         {
             case playerSpeed.FAST:
                 playerUpdateRate = 2;
+                GameEvents.Instance.TurnOnEssence3();
                 break;
             case playerSpeed.MEDIUM:
                 playerUpdateRate = 4;
+                GameEvents.Instance.TurnOnEssence();
+                GameEvents.Instance.TurnOnEssence2();
+                GameEvents.Instance.TurnOffEssence3();
                 break;
             case playerSpeed.SLOW:
                 playerUpdateRate = 8;
+                GameEvents.Instance.TurnOffEssence2();
                 break;
             default:
                 break;

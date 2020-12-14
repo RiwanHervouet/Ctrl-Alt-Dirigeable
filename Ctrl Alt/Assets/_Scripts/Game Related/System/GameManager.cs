@@ -7,6 +7,7 @@ public class GameManager : Singleton<GameManager>
     #region Initialization
     public OOE_Map mapScript;
     public Player player;
+    public ReadSouffleur souffleur;
     [Range(0f, 4f)] public float inputSelectionTime = 1f;
     [HideInInspector] public bool canReceiveInput = true;
     [HideInInspector] public int cleanInputList = 0;
@@ -38,6 +39,10 @@ public class GameManager : Singleton<GameManager>
         if (!player)
         {
             player = FindObjectOfType<Player>();
+        }
+        if (!souffleur)
+        {
+            souffleur = FindObjectOfType<ReadSouffleur>();
         }
 
         currentAltitude = startAltitude;

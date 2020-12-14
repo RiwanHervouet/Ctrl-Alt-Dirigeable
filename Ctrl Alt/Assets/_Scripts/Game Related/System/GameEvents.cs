@@ -141,6 +141,31 @@ public class GameEvents : Singleton<GameEvents>
 
     #region Feedback related
     #region Events
+    //LEDsOn
+    public event Action OnTurnOnEssence1;
+    public event Action OnTurnOnEssence2;
+    public event Action OnTurnOnEssence3;
+    public event Action OnTurnOnPause;
+    public event Action OnTurnOnRappel;
+    public event Action OnTurnOnAltitude1;
+    public event Action OnTurnOnAltitude2;
+    public event Action OnTurnOnAltitude3;
+    public event Action OnTurnOnConfirmationAltitude;
+    public event Action OnTurnOnConfirmationEssence;
+    public event Action OnTurnOnConfirmationVitesse;
+    //LEDsOff
+    public event Action OnTurnOffEssence1;
+    public event Action OnTurnOffEssence2;
+    public event Action OnTurnOffEssence3;
+    public event Action OnTurnOffPause;
+    public event Action OnTurnOffRappel;
+    public event Action OnTurnOffAltitude1;
+    public event Action OnTurnOffAltitude2;
+    public event Action OnTurnOffAltitude3;
+    public event Action OnTurnOffConfirmationAltitude;
+    public event Action OnTurnOffConfirmationEssence;
+    public event Action OnTurnOffConfirmationVitesse;
+
     //Hits
     public event Action OnMountainHit;
     public event Action OnLightningHit;
@@ -208,6 +233,98 @@ public class GameEvents : Singleton<GameEvents>
     #endregion
 
     #region Methods related to events
+    //LEDsOn
+    public void TurnOnEssence()
+    {
+        OnTurnOnEssence1?.Invoke();
+    }
+    public void TurnOnEssence2()
+    {
+        OnTurnOnEssence2?.Invoke();
+    }
+    public void TurnOnEssence3()
+    {
+        OnTurnOnEssence3?.Invoke();
+    }
+    public void TurnOnPause()
+    {
+        OnTurnOnPause?.Invoke();
+    }
+    public void TurnOnRappel()
+    {
+        OnTurnOnRappel?.Invoke();
+    }
+    public void TurnOnAltitude1()
+    {
+        OnTurnOnAltitude1?.Invoke();
+    }
+    public void TurnOnAltitude2()
+    {
+        OnTurnOnAltitude2?.Invoke();
+    }
+    public void TurnOnAltitude3()
+    {
+        OnTurnOnAltitude3?.Invoke();
+    }
+    public void TurnOnConfirmationAltitude()
+    {
+        OnTurnOnConfirmationAltitude?.Invoke();
+    }
+    public void TurnOnConfirmationEssence()
+    {
+        OnTurnOnConfirmationEssence?.Invoke();
+    }
+    public void TurnOnConfirmationVitesse()
+    {
+        OnTurnOnConfirmationEssence?.Invoke();
+    }
+
+    //LEDsOff           
+    public void TurnOffEssence1()
+    {
+        OnTurnOffEssence1?.Invoke();
+    }
+    public void TurnOffEssence2()
+    {
+        OnTurnOffEssence2?.Invoke();
+    }
+    public void TurnOffEssence3()
+    {
+        OnTurnOffEssence3?.Invoke();
+    }
+    public void TurnOffPause()
+    {
+        OnTurnOffPause?.Invoke();
+    }
+    public void TurnOffRappel()
+    {
+        OnTurnOffRappel?.Invoke();
+    }
+    public void TurnOffAltitude1()
+    {
+        OnTurnOffAltitude1?.Invoke();
+    }
+    public void TurnOffAltitude2()
+    {
+        OnTurnOffAltitude2?.Invoke();
+    }
+    public void TurnOffAltitude3()
+    {
+        OnTurnOffAltitude3?.Invoke();
+    }
+    public void TurnOffConfirmationAltitude()
+    {
+        OnTurnOffConfirmationAltitude?.Invoke();
+    }
+    public void TurnOffConfirmationEssence()
+    {
+        OnTurnOffConfirmationEssence?.Invoke();
+    }
+    public void TurnOffConfirmationVitesse()
+    {
+        OnTurnOffConfirmationVitesse?.Invoke();
+    }
+
     //Hits
     public void MountainHit()
     {
@@ -398,7 +515,7 @@ public class GameEvents : Singleton<GameEvents>
     {
         OnAlarmHit?.Invoke();
     }
-   
+
     //Clickers
     public void ClickerNavigation()
     {
